@@ -1,0 +1,27 @@
+.custom-header {
+    background-color: #ff5733; /* Cambia este valor por el color que desees */
+    color: white; /* Color del texto */
+    /* header fijo */
+/*     position: sticky;
+    top: 0;
+    z-index: 500; */
+}
+
+header {
+    padding: 20px; /* Ajusta el padding del header si es necesario */
+    text-align: center; /* Centra el texto */
+    position: relative; /* Para posicionar la imagen dentro del header */ 
+}
+
+header img {
+    object-fit:fill; /* Asegura que la imagen se ajuste bien al contenedor */
+    /* img al lado izquierdo */
+    float: left;
+    margin-right: 20px; /* Espacio entre la imagen y el texto */
+    border-radius: 50%; /* Hace que la imagen sea circular */
+    width: 130px; /* Ajusta el tamaño de la imagen */
+    height: 130px; /* Ajusta el tamaño de la imagen */
+    /* margen arriba */
+    margin-top: -15px;
+
+}
