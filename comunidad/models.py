@@ -12,10 +12,10 @@ class Usuario(models.Model):
     fecha_registro = models.DateTimeField(auto_now_add=True)
 
     class Rol(models.TextChoices):
-        ADMINISTRADOR = 'AD', _('Administrador')
-        CLIENTES = 'CL', _('Cliente')
-        EMPLEADOS = 'EM', _('Empleado')
-    rol=models.CharField(max_length=2, choices=Rol.choices,default=Rol.choices.CLIENTES,verbose_name="Rol")
+        ADMINISTRADOR = "AD", _("Administrador")
+        CLIENTES = "CL", _("Cliente")
+        EMPLEADOS = "EM", _("Empleado")
+    rol=models.CharField(max_length=2,choices=Rol.choices,default=Rol.CLIENTES,verbose_name="Rol")
 
     class TipoDocumento(models.TextChoices):
             CEDULA = 'CC', _("Cédula")
