@@ -1,0 +1,178 @@
+{% load django_bootstrap5 %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Favicon optimizado -->
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'img/av1.png' %}">
+    <link rel="apple-touch-icon" href="{% static 'img/av1.png' %}">
+    
+    <title>Aviones a Escala de Colombia - {{titulo}}</title>
+    
+    <!-- DNS prefetch para recursos externos -->
+    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    
+    <!-- Preload crítico del logo antes que otros recursos -->
+    <link rel="preload" href="{% static 'img/av1.png' %}" as="image" importance="high">
+    
+    <!-- CSS Bootstrap y otros -->
+    {% bootstrap_css %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    
+
+</head>
+
+<body>
+    <!-- LOADER: Se muestra primero -->
+    <div id="loader">
+        <div class="logo-container">
+            <div class="logo-spinner"></div>
+            <div class="logo" id="logoContainer">
+                <!-- Tu logo desde Django static -->
+                <img src="{% static 'img/av1.png' %}" alt="Logo AV" style="width: 100px; height: 100px; object-fit: cover; border-radius: 60%;" id="logoImg">
+            </div>
+        </div>
+        <div class="loading-text">Cargando Aviones a Escala...</div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+    </div>
+
+    <!-- CONTENIDO PRINCIPAL: Se muestra después de cargar -->
+    <div id="content">
+        {% include 'partials/header.html' %}
+
+        {% block contenido %}
+        <!-- Tu contenido va aquí -->
+        {% endblock contenido %}
+
+        {% include 'partials/footer.html' %}
+    </div>
+
+    <!-- JavaScript Bootstrap y otros -->
+    {% bootstrap_javascript %}
+
+    <!-- JavaScript del Loader -->
+    <script>
+        // Variables de control
+        let isLoaded = false;
+        let loadingProgress = 0;
+        let loadingInterval;
+        let minLoadTime = 1500; // Mínimo 1.5 segundos
+        let maxLoadTime = 3000; // Máximo 3 segundos
+        let startTime = Date.now();
+
+        // Función para ocultar el loader
+        function hideLoader() {
+            if (isLoaded) return; // Evitar múltiples ejecuciones
+            
+            console.log('Ocultando loader...');
+            isLoaded = true;
+            
+            const loader = document.getElementById('loader');
+            const content = document.getElementById('content');
+            
+            if (loadingInterval) {
+                clearInterval(loadingInterval);
+            }
+            
+            // Completar progreso si no está al 100%
+            document.getElementById('progressFill').style.width = '100%';
+            
+            // Ocultar loader con transición
+            loader.classList.add('hidden');
+            
+            // Mostrar contenido después de la transición
+            setTimeout(() => {
+                loader.style.display = 'none';
+                content.style.display = 'block';
+                
+                // Activar animación de entrada
+                setTimeout(() => {
+                    content.classList.add('show');
+                }, 50);
+            }, 500);
+        }
+
+        // Función para simular progreso de carga
+        function simulateProgress() {
+            const progressFill = document.getElementById('progressFill');
+            
+            loadingInterval = setInterval(() => {
+                loadingProgress += Math.random() * 12 + 3;
+                
+                if (loadingProgress >= 100) {
+                    loadingProgress = 100;
+                    clearInterval(loadingInterval);
+                    
+                    // Verificar tiempo mínimo transcurrido
+                    const elapsedTime = Date.now() - startTime;
+                    const remainingTime = Math.max(0, minLoadTime - elapsedTime);
+                    
+                    setTimeout(hideLoader, remainingTime);
+                }
+                
+                progressFill.style.width = loadingProgress + '%';
+            }, 150);
+        }
+
+        // Manejo del logo
+        function setupLogo() {
+            const logoImg = document.getElementById('logoImg');
+            const logoText = document.getElementById('logoText');
+            
+            logoImg.onerror = function() {
+                console.log('Error cargando logo av1.png, mostrando fallback');
+                logoImg.style.display = 'none';
+                logoText.style.display = 'block';
+                logoText.textContent = 'AV';
+            };
+            
+            logoImg.onload = function() {
+                console.log('Logo av1.png cargado correctamente');
+            };
+
+            // Si la imagen ya está en cache, onload podría no dispararse
+            if (logoImg.complete) {
+                logoImg.onload();
+            }
+        }
+
+        // Evento DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM cargado, iniciando loader...');
+            setupLogo();
+            simulateProgress();
+        });
+
+        // Evento window.load
+        window.addEventListener('load', function() {
+            console.log('Todos los recursos cargados');
+            
+            // Verificar tiempo mínimo
+            const elapsedTime = Date.now() - startTime;
+            if (elapsedTime < minLoadTime) {
+                setTimeout(hideLoader, minLoadTime - elapsedTime);
+            } else {
+                hideLoader();
+            }
+        });
+
+        // Timeout de seguridad
+        setTimeout(() => {
+            if (!isLoaded) {
+                console.log('Tiempo máximo alcanzado, forzando carga...');
+                hideLoader();
+            }
+        }, maxLoadTime);
+
+
+    </script>
+</body>
+</html>

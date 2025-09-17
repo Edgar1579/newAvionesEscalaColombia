@@ -1,27 +1,147 @@
-.custom-header {
-    background-color: #ff5733; /* Cambia este valor por el color que desees */
-    color: white; /* Color del texto */
-    /* header fijo */
-/*     position: sticky;
-    top: 0;
-    z-index: 500; */
-}
 
+        /* CSS crítico del loader inline para carga rápida */
+        #loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgb(64, 63, 63) 0%, gray 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+        }
+
+        #loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        /* Logo loader al estilo AdminLTE */
+        .logo-container {
+            position: relative;
+            margin-bottom: 10px;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #cdf2d4;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: logoFloat 2s ease-in-out infinite;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        .logo-spinner {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .loading-text {
+            color: white;
+            font-size: 18px;
+            font-weight: 300;
+            letter-spacing: 2px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        .progress-bar {
+            width: 200px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: white;
+            border-radius: 2px;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Contenido principal oculto por defecto */
+        #content {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        #content.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    
 header {
+    background-color: #39424b; /* Azul oscuro */
+    color: white;
     padding: 20px; /* Ajusta el padding del header si es necesario */
     text-align: center; /* Centra el texto */
     position: relative; /* Para posicionar la imagen dentro del header */ 
 }
+header a {
+    color: white; /* Color del texto de los enlaces */
+    text-decoration: none; /* Elimina el subrayado de los enlaces */
+    font-weight: bold; /* Hace el texto de los enlaces en negrita */
+}
+header a:hover {
+    text-decoration:wavy; /* Subraya el texto al pasar el cursor */
+}
 
-header img {
-    object-fit:fill; /* Asegura que la imagen se ajuste bien al contenedor */
-    /* img al lado izquierdo */
-    float: left;
-    margin-right: 20px; /* Espacio entre la imagen y el texto */
-    border-radius: 50%; /* Hace que la imagen sea circular */
-    width: 130px; /* Ajusta el tamaño de la imagen */
-    height: 130px; /* Ajusta el tamaño de la imagen */
-    /* margen arriba */
-    margin-top: -15px;
-
+body {
+    font-family: Arial, sans-serif; /* Fuente del cuerpo */
+    margin: 0;
+    padding: 0;
+    background-color: rgb(149, 149, 149); /* Color de fondo del cuerpo */
+    color: #333; /* Color del texto del cuerpo */
 }

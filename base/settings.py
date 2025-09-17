@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'clasificacion',
     'comunidad',
     'operaciones',
+    'configuracion',
     'django_bootstrap5',# pip install django-bootstrap5
     'crispy_forms', # pip install django-crispy-forms
 ]
@@ -63,6 +64,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [],
+        'DIRS': ['base/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
