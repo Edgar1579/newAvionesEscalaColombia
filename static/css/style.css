@@ -103,7 +103,7 @@
 
         .progress-fill {
             height: 100%;
-            background: white;
+            background: linear-gradient(to right, yellow, blue, red);
             border-radius: 2px;
             width: 0%;
             transition: width 0.3s ease;
