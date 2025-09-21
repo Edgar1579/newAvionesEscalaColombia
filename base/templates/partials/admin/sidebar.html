@@ -1,0 +1,113 @@
+{% load static %}
+
+
+<!-- Main Sidebar Container -->
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+<a href="{% url 'index' %}" class="brand-link decoration-none" style="display: flex; align-items: center;">
+    <img src="{% static 'img/av1sfondo.png' %}" alt="AVEC Logo" class="img-circle elevation-3" width="50" style="opacity: .8">
+    <div style="margin-left: 10px;">
+        <div class="brand-text font-weight-light">Aviones a Escala</div>
+        <div style="font-size: 0.8em; color: white;">de Colombia</div>
+    </div>
+</a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <!-- Sidebar user panel (optional) -->
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex align-items-center">
+    <div class="image">
+        <img src=" {% static 'img/default-user.jpeg' %} " class="img-circle elevation-2" alt="User  Image">
+    </div>
+    <div class="info ml-3">
+        <a href="#" class="d-block">
+            Admin Aviones
+        </a>
+    </div>
+</div>
+
+        <!-- SidebarSearch Form -->
+        <div class="form-inline">
+            <div class="input-group" data-widget="sidebar-search">
+                <input class="form-control form-control-sidebar" type="search" placeholder="Buscar..." aria-label="Buscar">
+                <div class="input-group-append">
+                    <button class="btn btn-sidebar">
+                        
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar Menu -->
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <li class="nav-item menu-close">
+                    <a href="#" class="nav-link ">
+                        
+                        <p>Comunidad</p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        
+                        <li class="nav-item">
+                            <a href="# " class="nav-link" data-url="">
+                                
+                                <p>Usuarios</p>
+                            </a>
+                        </li>  
+                        
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-url="">
+                                
+                                <p>Horas</p>
+                            </a>
+                        </li>
+                        
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-url="">
+                                
+                                <p>Permisos</p>
+                            </a> 
+
+                    </ul>
+                </li>
+
+                <li class="nav-item menu-close">
+                    <a href=" # " class="nav-link ">
+                        
+                        <p>Operaciones</p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                           <li class="nav-item">
+       <a href="#" class="nav-link" data-url="">
+           
+           <p>Anuncios</p>
+       </a>
+   </li>
+                        
+                    </ul>
+                </li>
+
+        <li class="nav-item menu-close">
+          <a href="#" class="nav-link ">
+            
+            <p>
+              Configuraciones
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="#" class="nav-link" data-url="">
+                
+                <p>Sliders</p>
+              </a>
+            </li>
+            
+          </ul>
+        </li>
+      </ul>
+      </nav>
+      <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+  </aside>
+     <!-- script para ventana activa -->
