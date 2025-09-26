@@ -4,6 +4,7 @@
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
+    <a href="{% url 'index' %}" class="brand-link decoration-none ">
 <a href="{% url 'index' %}" class="brand-link decoration-none" style="display: flex; align-items: center;">
     <img src="{% static 'img/av1sfondo.png' %}" alt="AVEC Logo" class="img-circle elevation-3" width="50" style="opacity: .8">
     <div style="margin-left: 10px;">
@@ -49,7 +50,7 @@
                     <ul class="nav nav-treeview">
                         
                         <li class="nav-item">
-                            <a href="# " class="nav-link" data-url="">
+                            <a href=" {% url "usuarios" %} " class="nav-link" data-url="">
                                 
                                 <p>Usuarios</p>
                             </a>
