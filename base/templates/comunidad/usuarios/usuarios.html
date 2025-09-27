@@ -9,7 +9,7 @@
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             {{form|crispy}}
-            <input class="btn btn-success" type="submit" value="Agregar {{titulo}}">
+            <input class="btn btn-success" type="submit" value="{{ accion }} {{ titulo }}" />
             <a href="{% url 'usuarios' %}" class="btn btn-danger">Cancelar</a>
         </form>
     </div>
@@ -49,7 +49,7 @@
                 <!-- {% if perms.comunidad.change_usuario %} -->
                 <td>
  
-                  <!-- Botón que abre el modal -->
+
 <button type="button"
         class="btn btn-danger"
         data-bs-toggle="modal"
@@ -82,17 +82,8 @@
 
                   
 
-<!-- Botón de editar con SweetAlert2 -->
-<button type="button" 
-        class="btn btn-primary btn-editar" 
-        data-id="{{ usuario.id }}"
-        data-name="{{ usuario.primer_nombre }} {{ usuario.primer_apellido }}"
-        data-url=""
-        data-bs-toggle="tooltip"  
-        data-bs-placement="top" 
-        title="Editar {{ usuario.primer_nombre }} {{ usuario.primer_apellido }}">
-  {% bs_icon 'pencil' %}
-</button>                
+
+ <a  href="{% url 'usuario-editar' usuario.id %}" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar {{ usuario.primer_nombre }} {{ usuario.primer_apellido }}">{% bs_icon 'pencil' %}</a>               
                 </td>
                 {% endif %}
               </tr>
