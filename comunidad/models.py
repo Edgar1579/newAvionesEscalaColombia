@@ -13,7 +13,7 @@ class Usuario(models.Model):
     segundo_apellido = models.CharField(max_length=45, verbose_name="Segundo Apellido")
     email = models.EmailField(unique=True)
     telefono = models.CharField(max_length=15, blank=True, null=True)
-    imagen = models.ImageField(upload_to=get_image_filename, blank=True, null=True,default="comunidad\default-user.jpeg")
+    imagen = models.ImageField(upload_to=get_image_filename, blank=True, null=True,default="comunidad/default-user.jpeg")
     fecha_registro= models.DateField(verbose_name="Fecha de Registro")
     class Rol(models.TextChoices):
         ADMINISTRADOR = "AD", _("Administrador")

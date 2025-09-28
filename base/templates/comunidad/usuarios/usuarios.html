@@ -1,99 +1,108 @@
 {% extends 'partials/admin/body.html' %}
 {% load crispy_forms_tags %}
-
 {% load bootstrap_icons %}
+{% load static %}
 
 {% block contenido %}
 <div class="container m-3 row">
-<div class="rounded card p-3 col-md-3">
-        <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{form|crispy}}
-            <input class="btn btn-success" type="submit" value="{{ accion }} {{ titulo }}" />
-            <a href="{% url 'usuarios' %}" class="btn btn-danger">Cancelar</a>
-        </form>
-    </div>
-    <div class="rounded card p-3  mx-4 col-md-8">
-      <table class="table table-bordered w-100 display nowrap" id="tabla-usuarios">
-        <thead class="table-dark">
-          <tr>
-            <th>Imagen</th>
-            <th>Primer Nombre</th>
-            <th>Segundo Nombre</th>
-            <th>Primer Apellido</th>
-            <th>Segundo Apellido</th>
-            <th>Fecha de Registro</th>
-            <th>Rol</th>
-            <th>Tipo de Documento</th>
-            <th>Documento</th>
-            <!-- {% if perms.comunidad.change_usuario %} -->
-            <th>Accion</th>
-            {% endif %}
-          </tr>
-        </thead>
-        <tbody>
-          {% for usuario in usuarios %}
-            {% if usuario.estado %}
-              <tr>
-                <td>
-                  <img src="{{ usuario.imagen.url }}" class="img-circle elevation-2" alt="User Image" width="60" />
-                </td>
-                <td>{{ usuario.primer_nombre }}</td>
-                <td>{{ usuario.segundo_nombre }}</td>
-                <td>{{ usuario.primer_apellido }}</td>
-                <td>{{ usuario.segundo_apellido }}</td>
-                <td>{{ usuario.fecha_registro }}</td>
-                <td> {{ usuario.get_rol_display }}</td>
-                <td>{{ usuario.get_tipo_documento_display }}</td>
-                <td>{{ usuario.documento }}</td>
-                <!-- {% if perms.comunidad.change_usuario %} -->
-                <td>
- 
+  <div class="rounded card p-3 col-md-3">
+    <!-- Mostrar errores del form si existen (del contexto de la vista) -->
+    {% if form_errors %}
+      <div class="alert alert-danger">
+        <strong>Errores en el formulario:</strong>
+        {{ form_errors }}
+      </div>
+    {% endif %}
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form|crispy }}
+      <input class="btn btn-success" type="submit" value="{{ accion }} {{ titulo }}" />
+      <a href="{% url 'usuarios' %}" class="btn btn-danger">Cancelar</a>
+    </form>
+  </div>
+  
+  <div class="rounded card p-3 mx-4 col-md-8">
+    <table class="table table-bordered w-100 display nowrap" id="tabla-usuarios">
+      <thead class="table-dark">
+        <tr>
+          <th>Imagen</th>
+          <th>Primer Nombre</th>
+          <th>Segundo Nombre</th>
+          <th>Primer Apellido</th>
+          <th>Segundo Apellido</th>
+          <th>Fecha de Registro</th>
+          <th>Rol</th>
+          <th>Tipo de Documento</th>
+          <th>Documento</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for usuario in usuarios %}
+          {% if usuario.estado %}
+            <tr>
+              <td>
+                {% if usuario.imagen %}
+                  <img src="{{ usuario.imagen.url }}" class="img-circle elevation-2" alt="{{ usuario.primer_nombre }} Image" width="60" />
+                {% else %}
+                  <img src="{% static 'img/default-user.jpeg' %}" class="img-circle elevation-2" alt="Default User Image" width="60" />
+                {% endif %}
+              </td>
+              <td>{{ usuario.primer_nombre }}</td>
+              <td>{{ usuario.segundo_nombre }}</td>
+              <td>{{ usuario.primer_apellido }}</td>
+              <td>{{ usuario.segundo_apellido }}</td>
+              <td>{{ usuario.fecha_registro }}</td>
+              <td>{{ usuario.get_rol_display }}</td>
+              <td>{{ usuario.get_tipo_documento_display }}</td>
+              <td>{{ usuario.documento }}</td>
+              <td>
+                <!-- Botón eliminar -->
+                <button type="button"
+                        class="btn btn-danger btn-sm me-2"
+                        data-action="delete-user"
+                        data-user-id="{{ usuario.id }}"
+                        data-user-name="{{ usuario.primer_nombre }} {{ usuario.primer_apellido }}"
+                        title="Eliminar {{ usuario.primer_nombre }} {{ usuario.primer_apellido }}"
+                        data-bs-toggle="tooltip">
+                  {% bs_icon 'trash' %}
+                </button>
 
-<button type="button"
-        class="btn btn-danger"
-        data-bs-toggle="modal"
-        data-bs-target="#staticBackdrop{{ usuario.id }}"
-        title="Eliminar {{ usuario.primer_nombre }} {{ usuario.primer_apellido }}"
-        data-bs-toggle="tooltip">
-  {% bs_icon 'trash' %}
-</button>
+                <!-- Botón editar -->
+                <a href="{% url 'usuario-editar' usuario.id %}" 
+                   class="btn btn-primary btn-sm" 
+                   data-bs-toggle="tooltip" 
+                   data-bs-placement="top" 
+                   title="Editar {{ usuario.primer_nombre }} {{ usuario.primer_apellido }}">
+                  {% bs_icon 'pencil' %}
+                </a>
+              </td>
+            </tr>
+          {% endif %}
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
 
-<!-- Modal -->
-<div class="modal fade" id="staticBackdrop{{ usuario.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel{{ usuario.id }}" aria-hidden="true">
+<!-- Modal único reutilizable para eliminar usuarios - FUERA DE LA TABLA -->
+<div class="modal fade" id="deleteUserModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="staticBackdropLabel{{ usuario.id }}">
-          ¿Estás seguro de eliminar a <strong>{{ usuario.primer_nombre }} {{ usuario.primer_apellido }}</strong>?
+        <h1 class="modal-title fs-5" id="deleteUserModalLabel">
+          Confirmar eliminación
         </h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
       </div>
       <div class="modal-body">
-        Una vez eliminado, <strong>{{ usuario.primer_nombre }} {{ usuario.primer_apellido }}</strong> no podrá recuperarse.
+        <p id="deleteUserMessage"></p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <a href=" {% url 'usuario-eliminar' usuario.id %} " class="btn btn-danger">¡Eliminar!</a>
+        <a href="#" class="btn btn-danger" id="confirmDeleteBtn">¡Eliminar!</a>
       </div>
     </div>
   </div>
-</div>
-
-                  
-
-
- <a  href="{% url 'usuario-editar' usuario.id %}" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar {{ usuario.primer_nombre }} {{ usuario.primer_apellido }}">{% bs_icon 'pencil' %}</a>               
-                </td>
-                {% endif %}
-              </tr>
-            {% endif %}
-          {% endfor %}
-        </tbody>
-      </table>
-</div>
-    </div>
-</div>
-
 </div>
 {% endblock contenido %}
