@@ -49,7 +49,7 @@
                 {% endif %}
               </td>
               <td>{{ usuario.primer_nombre }}</td>
-              <td>{{ usuario.segundo_nombre }}</td>
+              <td>{{ usuario.segundo_nombre|default:"" }}</td>
               <td>{{ usuario.primer_apellido }}</td>
               <td>{{ usuario.segundo_apellido }}</td>
               <td>{{ usuario.fecha_registro }}</td>

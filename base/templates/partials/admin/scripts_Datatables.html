@@ -66,3 +66,72 @@ $(document).ready(function () {
     $('[data-bs-toggle="tooltip"]').tooltip();
 });
 </script>
+
+<script>
+$(document).ready(function () {
+    // Inicializar DataTable para tabla productos
+    $('#tabla-productos').DataTable({
+        responsive: true,
+        dom: 'Bfrtip',
+        columnDefs: [
+            { responsivePriority: 3, targets: 2 },
+            { responsivePriority: 2, targets: 2 }
+        ],
+        buttons: ["copy", "csv", "excel", "pdf", "print", "colvis"],
+        language: {
+            processing: "Procesando...",
+            search: "Buscar:",
+            lengthMenu: "Mostrar _MENU_ registros",
+            info: "Mostrando registros del _START_ al _END_ de un total de _TOTAL_",
+            infoEmpty: "Mostrando registros del 0 al 0 de un total de 0",
+            infoFiltered: "(filtrado de un total de _MAX_ registros)",
+            loadingRecords: "Cargando...",
+            zeroRecords: "No se encontraron resultados",
+            emptyTable: "Ningún dato disponible en esta tabla",
+            paginate: {
+                first: "Primero",
+                previous: "Anterior",
+                next: "Siguiente",
+                last: "Último"
+            },
+            buttons: {
+                copy: "copiar",
+                pdf: "Exportar PDF",
+                print: "Imprimir",
+                copyTitle: 'Copiado al portapapeles',
+                copySuccess: {
+                    _: '%d filas copiadas',
+                    1: '1 fila copiada'
+                },
+                colvis: 'Columnas visibles'
+            },
+            aria: {
+                sortAscending: ": activar para ordenar de manera ascendente",
+                sortDescending: ": activar para ordenar de manera descendente"
+            }
+        },
+        drawCallback: function() {
+            // Reinicializar tooltips después de cada redibujado
+            $('[data-bs-toggle="tooltip"]').tooltip();
+        }
+    }).buttons().container().appendTo('#tabla-productos_wrapper .col-md-6:eq(0)');
+
+    // Manejar clic en botón de eliminar producto con delegación de eventos
+    $(document).on('click', '[data-action="delete-producto"]', function() {
+        var productoId = $(this).data('producto-id');
+        var productoNombre = $(this).data('producto-nombre');
+        var deleteUrl = "#".replace('0', productoId);
+        
+        // Actualizar contenido del modal
+        $('#deleteProductoModalLabel').html('¿Estás seguro de eliminar el producto <strong>' + productoNombre + '</strong>?');
+        $('#deleteProductoMessage').html('Una vez eliminado, <strong>' + productoNombre + '</strong> no podrá recuperarse.');
+        $('#confirmDeleteBtn').attr('href', deleteUrl);
+        
+        // Mostrar modal
+        $('#deleteProductoModal').modal('show');
+    });
+
+    // Inicializar tooltips
+    $('[data-bs-toggle="tooltip"]').tooltip();
+});
+</script>

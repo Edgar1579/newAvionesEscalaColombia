@@ -42,4 +42,12 @@ class Usuario(models.Model):
             return f"{self.primer_nombre} {self.segundo_nombre} {self.primer_apellido} {self.segundo_apellido}"
         else:
             return f"{self.primer_nombre} {self.primer_apellido} {self.segundo_apellido}"      
-    
+
+class Tienda(models.Model):
+    nombre= models.CharField(max_length=45,verbose_name="Nombre")
+    nit= models.PositiveIntegerField(verbose_name="NIT", unique=True)
+    direccion= models.CharField(max_length=100,verbose_name="Dirección")
+    usuario= models.ForeignKey(Usuario, verbose_name="Administrador", on_delete=models.CASCADE)
+    estado=models.BooleanField(default=True)
+    def __str__(self):
+        return self.nombre    

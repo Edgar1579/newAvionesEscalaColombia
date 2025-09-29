@@ -1,19 +1,20 @@
 {% extends 'partials/admin/body.html' %}
 {% block contenido %}
-
+{% load bootstrap_icons %}
+{% load static %}
 
   <!-- Info boxes -->
   <div class="row">
     
 <div class="col-12 col-sm-6 col-md-4">
   <div class="info-box">
-    <span class="info-box-icon bg-info elevation-1">
-    
-    </span>
+        <span class="info-box-icon bg-info elevation-1">
+          {% bs_icon 'person' size='1.5em'%}</i></span>
 
     <div class="info-box-content">
       <a href="#" class="nav-link">
         <span class="info-box-text">Usuarios</span>
+        
         <span class="info-box-number">{{ usuarios_cantidad }}</span>
       </a>
     </div>
@@ -26,9 +27,7 @@
   
  <div class="col-12 col-sm-6 col-md-4">
   <div class="info-box mb-3">
-    <span class="info-box-icon bg-danger elevation-1">
-      
-    </span>
+  <span class="info-box-icon bg-danger elevation-1">{% bs_icon 'shop' size='1.5em'%}</i></span>
 
     <div class="info-box-content">
       <a href="#" class="nav-link">
@@ -47,7 +46,7 @@
 
     <div class="col-12 col-sm-6 col-md-4">
       <div class="info-box mb-3">
-        <span class="info-box-icon bg-success elevation-1"></i></span>
+        <span class="info-box-icon bg-success elevation-1">{% bs_icon 'box-seam-fill' size='1.5em'%}</i></span>
 
         <div class="info-box-content">
           <span class="info-box-text">Productos</span>

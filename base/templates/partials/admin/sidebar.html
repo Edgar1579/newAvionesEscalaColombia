@@ -1,4 +1,5 @@
 {% load static %}
+{% load bootstrap_icons %}
 
 
 <!-- Main Sidebar Container -->
@@ -39,58 +40,63 @@
             </div>
         </div>
 
-        <!-- Sidebar Menu -->
-        <nav class="mt-2">
-            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                <li class="nav-item menu-close">
-                    <a href="#" class="nav-link ">
-                        
-                        <p>Comunidad</p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        
-                        <li class="nav-item">
-                            <a href=" {% url "usuarios" %} " class="nav-link" data-url="">
-                                
-                                <p>Usuarios</p>
-                            </a>
-                        </li>  
-                        
-                        <li class="nav-item">
-                            <a href="#" class="nav-link" data-url="">
-                                
-                                <p>Horas</p>
-                            </a>
-                        </li>
-                        
-                        <li class="nav-item">
-                            <a href="#" class="nav-link" data-url="">
-                                
-                                <p>Permisos</p>
-                            </a> 
-
-                    </ul>
-                </li>
-
-                <li class="nav-item menu-close">
-                    <a href=" # " class="nav-link ">
-                        
-                        <p>Operaciones</p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                           <li class="nav-item">
-       <a href="#" class="nav-link" data-url="">
-           
-           <p>Anuncios</p>
-       </a>
-   </li>
-                        
-                    </ul>
-                </li>
-
+ <!-- Sidebar Menu -->
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+          <!-- Add icons to the links using the .nav-icon class
+               with font-awesome or any other icon font library -->
+          <li class="nav-item menu-close">
+            <a href="#" class="nav-link ">
+              {% bs_icon 'people' %}
+              <i class="bi bi-people-fill"></i>
+              <p>
+                Comunidad
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{% url 'usuarios' %}" class="nav-link" data-url="">
+                  {% bs_icon 'person' %}
+                  <p>Usuarios</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="#" class="nav-link" data-url="">
+                  {% bs_icon 'shop' %}
+                  <p>Tiendas</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          
+      
+          <li class="nav-item menu-close">
+            <a href="#" class="nav-link ">
+              {% bs_icon 'megaphone-fill' %}
+              <p>
+                Operaciones
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{% url "productos" %}" class="nav-link" data-url="">
+                  {% bs_icon 'box-seam-fill' %}
+                  <p>Productos</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="" class="nav-link" data-url="">
+                  {% bs_icon 'basket-fill' %}
+                  <p>Pedidos</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          
+        
         <li class="nav-item menu-close">
           <a href="#" class="nav-link ">
-            
+            {% bs_icon 'gear-wide-connected' %}
             <p>
               Configuraciones
             </p>
@@ -98,7 +104,7 @@
           <ul class="nav nav-treeview">
             <li class="nav-item">
               <a href="#" class="nav-link" data-url="">
-                
+                {% bs_icon 'card-image' %}
                 <p>Sliders</p>
               </a>
             </li>

@@ -48,39 +48,11 @@
     <!-- Tarjetas de Productos -->
     <div class="container my-5">
         <div class="row">
-            <div class="col-md-4">
-                <div class="card">
-                    <img src="https://via.placeholder.com/300x200?text=Producto+1" class="card-img-top" alt="Producto 1">
-                    <div class="card-body">
-                        <h5 class="card-title">Producto 1</h5>
-                        <p class="card-text">Descripción del producto 1.</p>
-                        <p class="card-text"><strong>Precio: $10.00</strong></p>
-                        <a href="#" class="btn btn-primary">Agregar al carrito</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card">
-                    <img src="https://via.placeholder.com/300x200?text=Producto+2" class="card-img-top" alt="Producto 2">
-                    <div class="card-body">
-                        <h5 class="card-title">Producto 2</h5>
-                        <p class="card-text">Descripción del producto 2.</p>
-                        <p class="card-text"><strong>Precio: $20.00</strong></p>
-                        <a href="#" class="btn btn-primary">Agregar al carrito</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card">
-                    <img src="https://via.placeholder.com/300x200?text=Producto+3" class="card-img-top" alt="Producto 3">
-                    <div class="card-body">
-                        <h5 class="card-title">Producto 3</h5>
-                        <p class="card-text">Descripción del producto 3.</p>
-                        <p class="card-text"><strong>Precio: $30.00</strong></p>
-                        <a href="#" class="btn btn-primary">Agregar al carrito</a>
-                    </div>
-                </div>
-            </div>
+            {%for producto in productos %}
+            {% if producto.estado %}
+            {% include 'operaciones/productos/card.html' %}
+            {% endif %}
+            {% endfor %}
         </div>
     </div>
 {% endblock contenido %}
