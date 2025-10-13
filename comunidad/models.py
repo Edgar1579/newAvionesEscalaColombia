@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.models import User
 
 def get_image_filename(instance, filename):
     ext = filename.split('.')[-1]
@@ -11,10 +12,11 @@ class Usuario(models.Model):
     segundo_nombre = models.CharField(max_length=45, verbose_name="Segundo Nombre", blank=True, null=True)
     primer_apellido = models.CharField(max_length=45, verbose_name="Primer Apellido")
     segundo_apellido = models.CharField(max_length=45, verbose_name="Segundo Apellido")
-    email = models.EmailField(unique=True)
+    correo = models.EmailField(max_length=50, verbose_name="Correo", null=True, blank=True)  # AGREGADO
     telefono = models.CharField(max_length=15, blank=True, null=True)
     imagen = models.ImageField(upload_to=get_image_filename, blank=True, null=True,default="comunidad/default-user.jpeg")
     fecha_registro= models.DateField(verbose_name="Fecha de Registro")
+    
     class Rol(models.TextChoices):
         ADMINISTRADOR = "AD", _("Administrador")
         CLIENTES = "CL", _("Cliente")
@@ -26,13 +28,16 @@ class Usuario(models.Model):
             CEDULA_EXTRANJERIA = 'CE', _("Cédula de Extrangería")
 
     tipo_documento = models.CharField(max_length=2, choices=TipoDocumento.choices, verbose_name="Tipo de Documento")
-    documento = models.PositiveIntegerField(verbose_name="Documento", unique=True)        
+    documento = models.PositiveIntegerField(verbose_name="Documento", unique=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)  # CAMBIADO
     estado=models.BooleanField(default=True)
+    
     def clean(self):
             self.primer_nombre = self.primer_nombre.title() 
 
     def __str__(self):
         return f"{self.primer_nombre} {self.primer_apellido}"
+        
     class Meta:
         verbose_name_plural = "Usuarios"
         
@@ -41,8 +46,13 @@ class Usuario(models.Model):
         if self.segundo_nombre:
             return f"{self.primer_nombre} {self.segundo_nombre} {self.primer_apellido} {self.segundo_apellido}"
         else:
-            return f"{self.primer_nombre} {self.primer_apellido} {self.segundo_apellido}"      
-
+            return f"{self.primer_nombre} {self.primer_apellido} {self.segundo_apellido}"     
+    def usuario_activo(self):
+        if self.estado:
+            return Usuario.objects.filter(usuario=self, estado=True)
+        else:
+            return Usuario.objects.none()
+        
 class Tienda(models.Model):
     nombre= models.CharField(max_length=45,verbose_name="Nombre")
     nit= models.PositiveIntegerField(verbose_name="NIT", unique=True)

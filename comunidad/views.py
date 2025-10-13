@@ -2,7 +2,10 @@ from django.shortcuts import render, redirect
 from comunidad.forms import UsuarioForm, UsuarioEditarForm
 from comunidad.models import Usuario
 from django.contrib import messages
+from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password
 from PIL import Image
+
 # Create your views here.
 def usuario_crear(request):
     titulo="Usuario"
@@ -11,20 +14,45 @@ def usuario_crear(request):
     if request.method == "POST":
         form=UsuarioForm(request.POST,request.FILES)
         if form.is_valid():
-            usuario=form.save()
-            messages.success(request, f'¡El Usuario se agregó de forma exitosa!')
-            if usuario.imagen:
+            if not User.objects.filter(username=request.POST['documento']):
+                user = User.objects.create_user('nombre','email@email','pass')
+                user.username= request.POST['documento']
+                user.first_name= request.POST['primer_nombre']
+                user.last_name= request.POST['primer_apellido']
+                user.email= request.POST['correo']
+                user.password=make_password("@" + request.POST['primer_nombre'][0] + request.POST['primer_apellido'][0] + request.POST['documento'][-4:])
+                user.save()
+            else:
+                user= User.objects.get(username=request.POST['documento'])
+                
+            usuario = Usuario.objects.create(
+                primer_nombre=request.POST['primer_nombre'],
+                segundo_nombre=request.POST['segundo_nombre'],
+                primer_apellido=request.POST['primer_apellido'],
+                segundo_apellido=request.POST['segundo_apellido'],
+                fecha_registro=request.POST['fecha_registro'],
+                imagen=request.FILES.get('imagen'),  # Asume que tu formulario maneja archivos
+                correo=request.POST['correo'],
+                tipo_documento=request.POST['tipo_documento'],
+                documento=request.POST['documento'],
+                user=user,
+                rol=request.POST['rol'],                
+            )
+            messages.success(request, f'¡El Usuario se agregó de forma exitosa!')    
+            return redirect('usuarios')
+            """ if usuario.imagen:
                  img = Image.open(usuario.imagen.path)
                  img= img.resize((500,500))
                  img.save(usuario.imagen.path)
-            usuario.save()
-            return redirect('usuarios')
+            usuario.save() """
+            
+            
         else:
             ##agregar mensaje error
             messages.success(request, f'¡Error al agregar al Usuario!')
             
     else:
-            form=UsuarioForm()
+        form=UsuarioForm()
     context={ 
         "titulo":titulo,
         "usuarios":usuarios,

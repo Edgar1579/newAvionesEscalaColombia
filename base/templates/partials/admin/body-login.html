@@ -1,0 +1,28 @@
+{% load static %}
+{% load django_bootstrap5 %}
+<!DOCTYPE html>
+<html lang="es">    
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+
+    <title>Aviones a Escala de Colombia - Iniciar Sesión</title>
+
+
+   
+</head>
+
+
+    {% block contenido %} 
+     
+    {% endblock contenido %}
+    
+    </body>
+</html>
+    
+
+    
