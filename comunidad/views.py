@@ -1,5 +1,6 @@
-from django.shortcuts import render, redirect
-from comunidad.forms import UsuarioForm, UsuarioEditarForm
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.models import Group
+from comunidad.forms import UsuarioForm, UsuarioEditarForm, GroupForm
 from comunidad.models import Usuario
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -100,3 +101,23 @@ def usuario_eliminar(request,pk):
     ## Agregar mensaje de exito
     return redirect('usuarios')
 
+def edit_group(request, group_id=None):
+    groups = Group.objects.all()
+    if group_id:
+        group = get_object_or_404(Group, id=group_id)
+    else:
+        group = None
+
+    if request.method == 'POST':
+        form = GroupForm(request.POST, instance=group)
+        if form.is_valid():
+            form.save()
+            return redirect('edit_group')  # Cambia 'list_groups' por el nombre de la URL donde se listan los grupos
+    else:
+        form = GroupForm(instance=group)
+    context={
+    'groups':groups,
+    'group': group,
+    'form': form
+    }
+    return render(request, 'comunidad/usuarios/grupos.html', context)

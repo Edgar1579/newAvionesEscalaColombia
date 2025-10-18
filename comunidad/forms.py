@@ -1,5 +1,6 @@
 from django.forms import ModelForm, widgets
 from comunidad.models import Usuario
+from django.contrib.auth.models import Group
 
 class UsuarioForm(ModelForm):
     class Meta:
@@ -16,7 +17,10 @@ class UsuarioEditarForm(ModelForm):
         fields= "__all__"
         exclude=["estado","fecha_registro", "documento","user"]
 
-        
+class GroupForm(ModelForm):
+    class Meta:
+        model = Group
+        fields = ['name']       
 
         
         
