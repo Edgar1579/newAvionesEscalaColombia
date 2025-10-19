@@ -5,6 +5,7 @@
 
 {% block contenido %}
 <div class="container m-3 row">
+  {% if perms.comunidad.add_usuario %}
   <div class="rounded card p-3 col-md-3">
     <!-- Mostrar errores del form si existen (del contexto de la vista) -->
     {% if form_errors %}
@@ -20,8 +21,11 @@
       <a href="{% url 'usuarios' %}" class="btn btn-danger">Cancelar</a>
     </form>
   </div>
+  {% endif %}
   
   <div class="rounded card p-3 mx-4 col-md-8">
+      <a href="{% url 'create_group' %}" class="btn btn-info w-25">Roles</a><hr>
+      
     <table class="table table-bordered w-100 display nowrap" id="tabla-usuarios">
       <thead class="table-dark">
         <tr>
@@ -34,7 +38,9 @@
           <th>Rol</th>
           <th>Tipo de Documento</th>
           <th>Documento</th>
+          {% if perms.comunidad.change_usuario %}
           <th>Acción</th>
+          {% endif %}
         </tr>
       </thead>
       <tbody>
@@ -53,9 +59,10 @@
               <td>{{ usuario.primer_apellido }}</td>
               <td>{{ usuario.segundo_apellido }}</td>
               <td>{{ usuario.fecha_registro }}</td>
-              <td>{{ usuario.get_rol_display }}</td>
+              <td>{{ usuario.user.groups.first }}</td>
               <td>{{ usuario.get_tipo_documento_display }}</td>
               <td>{{ usuario.documento }}</td>
+              {% if perms.comunidad.change_usuario %}
               <td>
                 <!-- Botón eliminar -->
                 <button type="button"
@@ -77,6 +84,7 @@
                   {% bs_icon 'pencil' %}
                 </a>
               </td>
+              {% endif %}
             </tr>
           {% endif %}
         {% endfor %}

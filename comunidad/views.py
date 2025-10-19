@@ -4,10 +4,12 @@ from comunidad.forms import UsuarioForm, UsuarioEditarForm, GroupForm
 from comunidad.models import Usuario
 from django.contrib import messages
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.hashers import make_password
 from PIL import Image
 
 # Create your views here.
+#@permission_required('comunidad.add_usuario', raise_exception=True)
 def usuario_crear(request):
     titulo="Usuario"
     accion="Agregar"
@@ -119,13 +121,15 @@ def edit_group(request, group_id=None):
     if request.method == 'POST':
         form = GroupForm(request.POST, instance=group)
         if form.is_valid():
-            form.save()
-            return redirect('edit_group',group_id)  # Cambia 'list_groups' por el nombre de la URL donde se listan los grupos
+            grupo_guardado = form.save()  # Guarda y obtén la instancia guardada
+            messages.success(request, 'Grupo guardado exitosamente')
+            return redirect('edit_group', group_id=grupo_guardado.id)  # Usa el ID del grupo guardado
     else:
         form = GroupForm(instance=group)
-    context={
-    'groups':groups,
-    'group': group,
-    'form': form
+    
+    context = {
+        'groups': groups,
+        'group': group,
+        'form': form
     }
     return render(request, 'comunidad/usuarios/grupos.html', context)
