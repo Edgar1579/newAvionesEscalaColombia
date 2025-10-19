@@ -25,7 +25,10 @@ def usuario_crear(request):
                 user.save()
             else:
                 user= User.objects.get(username=request.POST['documento'])
-                
+            rol_id = request.POST.get('rol')  # Obtén el ID del grupo seleccionado en el formulario
+            if rol_id:
+                rol = Group.objects.get(id=rol_id)
+                user.groups.add(rol)  # Asocia el usuario al grupo    
             usuario = Usuario.objects.create(
                 primer_nombre=request.POST['primer_nombre'],
                 segundo_nombre=request.POST['segundo_nombre'],
@@ -73,6 +76,11 @@ def usuario_editar(request,pk):
         form=UsuarioEditarForm(request.POST,request.FILES, instance=usuario)
         if form.is_valid():
             usuario=form.save()
+                        # Actualizar el grupo del usuario
+            rol_id = request.POST.get('rol')
+            if rol_id:
+                rol = Group.objects.get(id=rol_id)
+                usuario.user.groups.set([rol])
             if usuario.imagen:
                 img = Image.open(usuario.imagen.path)
                 img= img.resize((500,500))
@@ -112,7 +120,7 @@ def edit_group(request, group_id=None):
         form = GroupForm(request.POST, instance=group)
         if form.is_valid():
             form.save()
-            return redirect('edit_group')  # Cambia 'list_groups' por el nombre de la URL donde se listan los grupos
+            return redirect('edit_group',group_id)  # Cambia 'list_groups' por el nombre de la URL donde se listan los grupos
     else:
         form = GroupForm(instance=group)
     context={

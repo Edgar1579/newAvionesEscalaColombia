@@ -16,12 +16,6 @@ class Usuario(models.Model):
     telefono = models.CharField(max_length=15, blank=True, null=True)
     imagen = models.ImageField(upload_to=get_image_filename, blank=True, null=True,default="comunidad/default-user.jpeg")
     fecha_registro= models.DateField(verbose_name="Fecha de Registro")
-    
-    class Rol(models.TextChoices):
-        ADMINISTRADOR = "AD", _("Administrador")
-        CLIENTES = "CL", _("Cliente")
-        EMPLEADOS = "EM", _("Empleado")
-    rol=models.CharField(max_length=2,choices=Rol.choices,default=Rol.CLIENTES,verbose_name="Rol")
 
     class TipoDocumento(models.TextChoices):
             CEDULA = 'CC', _("Cédula")
