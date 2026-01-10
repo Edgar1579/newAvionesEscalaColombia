@@ -1,13 +1,15 @@
-<div class="col-md-3" style="position: relative;">
-    <div class="card h-100">
-        <img src="{{ producto.imagen.url }}" class="card-img-top img-fluid mx-auto d-block p-2" alt="Imagen de producto">
-        <div class="card-body">
-            <h5 class="card-title">{{producto.nombre}}</h5>
-            <p class="card-text">{{producto.descripcion}}</p>
-            <p class="card-text"><strong>{{producto.Precio}}</strong></p>
-            <a href="#" class="btn btn-primary">Agregar al carrito</a>
-        </div>
+<div class="card mb-3" style="max-width: 540px; margin-bottom: 30px !important;">
+  <div class="row g-0">
+    <div class="col-md-8">
+      <img src="{{ producto.imagen.url }}" class="img-fluid rounded-start" alt="{{ producto.nombre }}">
     </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 class="card-title">{{ producto.nombre }}</h5>
+        <p class="card-text">{{ producto.descripcion }}</p>
+        <p class="card-text">${{ producto.Precio}}</p>
+        <a href="#" class="btn btn-primary">Agregar al carrito</a>
+      </div>
+    </div>
+  </div>
 </div>
-
-

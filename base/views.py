@@ -8,7 +8,6 @@ from django.db.models import Count,Q
 
 
 
-
 def principal(request):
     titulo = "Bienvenido"
     sliders= Slider.objects.filter(estado=True)
