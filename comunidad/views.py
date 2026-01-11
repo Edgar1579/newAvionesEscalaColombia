@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import Group
-from comunidad.forms import UsuarioForm, UsuarioEditarForm, GroupForm
-from comunidad.models import Usuario
+from comunidad.forms import UsuarioForm, UsuarioEditarForm, GroupForm, TiendaForm, TiendaEditarForm
+from comunidad.models import Usuario,Tienda
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import permission_required
@@ -11,61 +11,62 @@ from PIL import Image
 # Create your views here.
 #@permission_required('comunidad.add_usuario', raise_exception=True)
 def usuario_crear(request):
-    titulo="Usuario"
-    accion="Agregar"
-    usuarios=Usuario.objects.all()
+    titulo = "Usuario"
+    accion = "Agregar"
+    usuarios = Usuario.objects.all()
+    
     if request.method == "POST":
-        form=UsuarioForm(request.POST,request.FILES)
+        form = UsuarioForm(request.POST, request.FILES)
         if form.is_valid():
-            if not User.objects.filter(username=request.POST['documento']):
-                user = User.objects.create_user('nombre','email@email','pass')
-                user.username= request.POST['documento']
-                user.first_name= request.POST['primer_nombre']
-                user.last_name= request.POST['primer_apellido']
-                user.email= request.POST['correo']
-                user.password=make_password("@" + request.POST['primer_nombre'][0] + request.POST['primer_apellido'][0] + request.POST['documento'][-4:])
-                user.save()
+            # 1. Crear o obtener el User de Django
+            if not User.objects.filter(username=request.POST['documento']).exists():
+                user = User.objects.create_user(
+                    username=request.POST['documento'],
+                    first_name=request.POST['primer_nombre'],
+                    last_name=request.POST['primer_apellido'],
+                    email=request.POST['correo'],
+                    password="@" + request.POST['primer_nombre'][0] + request.POST['primer_apellido'][0] + request.POST['documento'][-4:]
+                )
             else:
-                user= User.objects.get(username=request.POST['documento'])
-            rol_id = request.POST.get('rol')  # Obtén el ID del grupo seleccionado en el formulario
+                user = User.objects.get(username=request.POST['documento'])
+            
+            # 2. Asignar el grupo/rol
+            rol_id = request.POST.get('rol')
             if rol_id:
                 rol = Group.objects.get(id=rol_id)
-                user.groups.add(rol)  # Asocia el usuario al grupo    
+                user.groups.clear()  # Limpia grupos anteriores
+                user.groups.add(rol)
+            
+            # 3. Crear el Usuario personalizado (SIN el campo 'rol')
             usuario = Usuario.objects.create(
                 primer_nombre=request.POST['primer_nombre'],
-                segundo_nombre=request.POST['segundo_nombre'],
+                segundo_nombre=request.POST.get('segundo_nombre', ''),
                 primer_apellido=request.POST['primer_apellido'],
                 segundo_apellido=request.POST['segundo_apellido'],
                 fecha_registro=request.POST['fecha_registro'],
-                imagen=request.FILES.get('imagen'),  # Asume que tu formulario maneja archivos
+                imagen=request.FILES.get('imagen'),
                 correo=request.POST['correo'],
+                telefono=request.POST.get('telefono', ''),
                 tipo_documento=request.POST['tipo_documento'],
                 documento=request.POST['documento'],
                 user=user,
-                rol=request.POST['rol'],                
+                # ← ELIMINADO: rol=request.POST['rol']
             )
-            messages.success(request, f'¡El Usuario se agregó de forma exitosa!')    
+            
+            messages.success(request, f'¡El Usuario {usuario.full_name} se agregó de forma exitosa!')
             return redirect('usuarios')
-            """ if usuario.imagen:
-                 img = Image.open(usuario.imagen.path)
-                 img= img.resize((500,500))
-                 img.save(usuario.imagen.path)
-            usuario.save() """
-            
-            
         else:
-            ##agregar mensaje error
-            messages.success(request, f'¡Error al agregar al Usuario!')
-            
+            messages.error(request, '¡Error al agregar al Usuario!')
     else:
-        form=UsuarioForm()
-    context={ 
-        "titulo":titulo,
-        "usuarios":usuarios,
-        "form":form,
-        "accion":accion,
+        form = UsuarioForm()
+    
+    context = {
+        "titulo": titulo,
+        "usuarios": usuarios,
+        "form": form,
+        "accion": accion,
     }
-    return render(request,"comunidad/usuarios/usuarios.html",context)
+    return render(request, "comunidad/usuarios/usuarios.html", context)
 
 def usuario_editar(request,pk):
     usuario=Usuario.objects.get(id=pk)
@@ -133,3 +134,62 @@ def edit_group(request, group_id=None):
         'form': form
     }
     return render(request, 'comunidad/usuarios/grupos.html', context)
+
+def tienda_crear(request):
+    titulo="Tienda"
+    accion="Agregar"
+    tiendas= Tienda.objects.all()
+    if request.method=="POST":
+        form= TiendaForm(request.POST,request.FILES)
+        if form.is_valid():
+            tienda= form.save()
+            tienda.save()
+            messages.success(request, f'¡El Tienda se agregó de forma exitosa!')
+
+            return redirect("tiendas")
+        else:
+            messages.success(request, f'¡Error al agregar al Tienda!')
+    else:
+        form=TiendaForm()
+    context={
+        "titulo":titulo,
+        "tiendas":tiendas,
+        "form":form,
+        "accion":accion
+    }
+    return render(request,"comunidad/tiendas/tiendas.html", context)
+
+
+def tienda_eliminar(pk):
+    tienda=Tienda.objects.filter(id=pk)
+    tienda.update(estado=False)
+    
+    ## Agregar mensjae de exito
+    return redirect('tiendas')
+
+
+def tienda_editar(request,pk):
+    tienda= Tienda.objects.get(id=pk)
+    tiendas= Tienda.objects.all()
+    accion="Editar"
+    titulo=f"Tienda {tienda.nombre}"
+
+    if request.method=="POST":
+        form= TiendaEditarForm(request.POST,request.FILES, instance=tienda)
+        if form.is_valid():
+            tienda= form.save()
+           
+            messages.success(request, f'¡{tienda.nombre} se editó de forma exitosa!')
+            return redirect("tiendas")
+        else:
+            messages.error(request, f'¡Error al editar a {tienda.nombre}!')
+
+    else:
+        form=TiendaEditarForm(instance=tienda)
+    context={
+        "titulo":titulo,
+        "tiendas":tiendas,
+        "form":form,
+        "accion":accion
+    }
+    return render(request,"comunidad/tiendas/tiendas.html", context)

@@ -31,6 +31,7 @@ urlpatterns = [
     path('adm/', principal_admin,name="index-admin"),
     path('comunidad/', include('comunidad.urls')),
     path('operaciones/', include('operaciones.urls')),
+    path('configuraciones/',include('configuracion.urls')),
     
 ]
 if settings.DEBUG:

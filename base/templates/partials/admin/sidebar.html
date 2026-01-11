@@ -61,7 +61,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="#" class="nav-link" data-url="">
+                <a href="{% url 'tiendas' %}" class="nav-link" data-url="">
                   {% bs_icon 'shop' %}
                   <p>Tiendas</p>
                 </a>
@@ -94,20 +94,22 @@
           </li>
           
         
-        <li class="nav-item menu-close">
-          <a href="#" class="nav-link ">
-            {% bs_icon 'gear-wide-connected' %}
-            <p>
-              Configuraciones
-            </p>
-          </a>
-          <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a href="#" class="nav-link" data-url="">
-                {% bs_icon 'card-image' %}
-                <p>Sliders</p>
-              </a>
-            </li>
+       <li class="nav-item menu-close">
+  <a href="#" class="nav-link">
+    {% bs_icon 'gear-wide-connected' %}
+    <p>
+      Configuraciones
+    </p>
+  </a>
+  <ul class="nav nav-treeview">
+    <li class="nav-item">
+      <a href="{% url 'sliders' %}" class="nav-link">
+        {% bs_icon 'card-image' %}
+        <p>Sliders</p>
+      </a>
+    </li>
+  </ul>
+</li>
             
           </ul>
         </li>
