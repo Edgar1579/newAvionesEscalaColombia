@@ -1,8 +1,11 @@
 {% extends 'partials/admin/body-login.html' %}
 {% load static %}
 
+<body class="hold-transition login-page"></body>
+
 {% block contenido %}
     <!-- hacer un login -->
+
 <div class="container">
         <!-- Animación circular con 50 spans -->
         <span style="--i:1;"></span>
@@ -78,7 +81,7 @@
             {% endif %}
             
             <div class="forgot-pass">
-                <a href="#">¿Olvidaste tu contraseña?</a>
+                <a href="{% url 'pass_reset' %}">¿Olvidaste tu contraseña?</a>
             </div>
             
             <button type="submit" class="btn">Ingresar</button>

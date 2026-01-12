@@ -136,60 +136,66 @@ def edit_group(request, group_id=None):
     return render(request, 'comunidad/usuarios/grupos.html', context)
 
 def tienda_crear(request):
-    titulo="Tienda"
-    accion="Agregar"
-    tiendas= Tienda.objects.all()
-    if request.method=="POST":
-        form= TiendaForm(request.POST,request.FILES)
+    """Vista para listar y crear tiendas"""
+    titulo = "Tienda"
+    accion = "Agregar"
+    tiendas = Tienda.objects.filter(estado=True)
+    
+    if request.method == "POST":
+        form = TiendaForm(request.POST, request.FILES)
         if form.is_valid():
-            tienda= form.save()
-            tienda.save()
-            messages.success(request, f'¡El Tienda se agregó de forma exitosa!')
-
+            tienda = form.save()
+            messages.success(request, f'¡La tienda "{tienda.nombre}" se agregó exitosamente!')
             return redirect("tiendas")
         else:
-            messages.success(request, f'¡Error al agregar al Tienda!')
+            messages.error(request, '¡Error al agregar la tienda!')
     else:
-        form=TiendaForm()
-    context={
-        "titulo":titulo,
-        "tiendas":tiendas,
-        "form":form,
-        "accion":accion
-    }
-    return render(request,"comunidad/tiendas/tiendas.html", context)
-
-
-def tienda_eliminar(pk):
-    tienda=Tienda.objects.filter(id=pk)
-    tienda.update(estado=False)
+        form = TiendaForm()
     
-    ## Agregar mensjae de exito
+    context = {
+        "titulo": titulo,
+        "tiendas": tiendas,
+        "form": form,
+        "accion": accion
+    }
+    return render(request, "comunidad/tiendas/tiendas.html", context)
+
+
+def tienda_eliminar(request, pk):  # ← CORREGIDO: agregado 'request'
+    """Vista para eliminar (desactivar) una tienda"""
+    tienda = get_object_or_404(Tienda, id=pk)
+    nombre = tienda.nombre
+    
+    # Desactivar la tienda
+    tienda.estado = False
+    tienda.save()
+    
+    messages.success(request, f'¡Tienda "{nombre}" eliminada exitosamente!')
     return redirect('tiendas')
 
 
-def tienda_editar(request,pk):
-    tienda= Tienda.objects.get(id=pk)
-    tiendas= Tienda.objects.all()
-    accion="Editar"
-    titulo=f"Tienda {tienda.nombre}"
+def tienda_editar(request, pk):
+    """Vista para editar una tienda"""
+    tienda = get_object_or_404(Tienda, id=pk)
+    tiendas = Tienda.objects.filter(estado=True)
+    accion = "Editar"
+    titulo = f"Tienda {tienda.nombre}"
 
-    if request.method=="POST":
-        form= TiendaEditarForm(request.POST,request.FILES, instance=tienda)
+    if request.method == "POST":
+        form = TiendaEditarForm(request.POST, request.FILES, instance=tienda)
         if form.is_valid():
-            tienda= form.save()
-           
-            messages.success(request, f'¡{tienda.nombre} se editó de forma exitosa!')
+            tienda = form.save()
+            messages.success(request, f'¡{tienda.nombre} se editó exitosamente!')
             return redirect("tiendas")
         else:
-            messages.error(request, f'¡Error al editar a {tienda.nombre}!')
-
+            messages.error(request, f'¡Error al editar {tienda.nombre}!')
     else:
-        form=TiendaEditarForm(instance=tienda)
-    context={
-        "titulo":titulo,
-        "tiendas":tiendas,
-        "form":form,
-        "accion":accion
+        form = TiendaEditarForm(instance=tienda)
+    
+    context = {
+        "titulo": titulo,
+        "tiendas": tiendas,
+        "form": form,
+        "accion": accion
     }
-    return render(request,"comunidad/tiendas/tiendas.html", context)
+    return render(request, "comunidad/tiendas/tiendas.html", context)

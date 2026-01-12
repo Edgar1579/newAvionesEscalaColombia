@@ -141,6 +141,14 @@ MEDIA_ROOT= os.path.join(BASE_DIR,"media/")
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.googlemail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'avecbm2024@gmail.com'
+EMAIL_HOST_PASSWORD = 'vgum ugmo qubb mwbn'
+EMAIL_USE_TLS = True
+
+
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'index-admin'
 
