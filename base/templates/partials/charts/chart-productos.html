@@ -1,0 +1,43 @@
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const ctx = document.getElementById('Chart-Productos');
+  if (!ctx) return;
+
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: [
+        {% for tienda in tiendas_con_productos %}
+          '{{ tienda.nombre }}'{% if not forloop.last %},{% endif %}
+        {% endfor %}
+      ],
+      datasets: [{
+        label: 'Productos',
+        data: [
+          {% for tienda in tiendas_con_productos %}
+            {{ tienda.cantidad_productos }}{% if not forloop.last %},{% endif %}
+          {% endfor %}
+        ],
+
+        /* 👇 AQUÍ VA EL COLOR 👇 */
+        backgroundColor: 'rgba(25, 135, 84, 0.7)',   // verde Bootstrap
+        borderColor: 'rgba(25, 135, 84, 1)',
+        borderWidth: 1,
+        hoverBackgroundColor: 'rgba(220, 53, 69, 0.8)'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: { precision: 0 }
+        }
+      }
+    }
+  });
+});
+</script>

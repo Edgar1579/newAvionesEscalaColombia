@@ -5,48 +5,37 @@
 
   <!-- Info boxes -->
   <div class="row">
-    
-<div class="col-12 col-sm-6 col-md-4">
-  <div class="info-box">
+    <div class="col-12 col-sm-6 col-md-3">
+      <div class="info-box">
         <span class="info-box-icon bg-info elevation-1">
-          {% bs_icon 'person' size='1.5em'%}</i></span>
+          {% bs_icon 'person' size='1.5em' %}</span>  <!-- Eliminé el </i> extra -->
 
-    <div class="info-box-content">
-      <a href="#" class="nav-link">
-        <span class="info-box-text">Usuarios</span>
-        
-        <span class="info-box-number">{{ usuarios_cantidad }}</span>
-      </a>
+        <div class="info-box-content">
+          <span class="info-box-text">Usuarios</span>
+          <span class="info-box-number">{{ usuarios_cantidad }}</span>
+        </div>
+        <!-- /.info-box-content -->
+      </div>
+      <!-- /.info-box -->
     </div>
-    <!-- /.info-box-content -->
-  </div>
-  <!-- /.info-box -->
-</div>
-
     <!-- /.col -->
-  
- <div class="col-12 col-sm-6 col-md-4">
-  <div class="info-box mb-3">
-  <span class="info-box-icon bg-danger elevation-1">{% bs_icon 'shop' size='1.5em'%}</i></span>
-
-    <div class="info-box-content">
-      <a href="#" class="nav-link">
-        <span class="info-box-text">Tiendas</span>
-        <span class="info-box-number">{{ tiendas_cantidad }}</span>
-      </a>
-    </div>
-    <!-- /.info-box-content -->
-  </div>
-  <!-- /.info-box -->
-</div>
-
-</a>
-
-    <!-- /.col -->
-
-    <div class="col-12 col-sm-6 col-md-4">
+    <div class="col-12 col-sm-6 col-md-3">
       <div class="info-box mb-3">
-        <span class="info-box-icon bg-success elevation-1">{% bs_icon 'box-seam-fill' size='1.5em'%}</i></span>
+        <span class="info-box-icon bg-danger elevation-1">{% bs_icon 'shop' size='1.5em' %}</span>  <!-- Eliminé el </i> extra -->
+
+        <div class="info-box-content">
+          <span class="info-box-text">Tiendas</span>
+          <span class="info-box-number">{{ tiendas_cantidad }}</span>
+        </div>
+        <!-- /.info-box-content -->
+      </div>
+      <!-- /.info-box -->
+    </div>
+    <!-- /.col -->
+
+    <div class="col-12 col-sm-6 col-md-3">
+      <div class="info-box mb-3">
+        <span class="info-box-icon bg-success elevation-1">{% bs_icon 'box-seam-fill' size='1.5em' %}</span>  <!-- Eliminé el </i> extra -->
 
         <div class="info-box-content">
           <span class="info-box-text">Productos</span>
@@ -57,20 +46,41 @@
       <!-- /.info-box -->
     </div>
     <!-- /.col -->
-    
+    <div class="col-12 col-sm-6 col-md-3">
+      <div class="info-box mb-3">
+        <span class="info-box-icon bg-warning elevation-1">{% bs_icon 'basket-fill' size='1.5em' %}</span>  <!-- Eliminé el </i> extra -->
+
+        <div class="info-box-content">
+          <span class="info-box-text">Pedidos</span>
+          <span class="info-box-number">{{ pedidos_cantidad }}</span>
+        </div>
+        <!-- /.info-box-content -->
+      </div>
+      <!-- /.info-box -->
+    </div>
     <!-- /.col -->
   </div>
   <!-- /.row -->
 
-  <!-- <canvas id="Chart-anuncios"></canvas> -->
+  <!-- Gráfico de productos -->
+
+  <!-- Carga Chart.js -->
+<div class="card w-50 mx-auto p-4">
+  <div class="h3">Productos por Tienda</div>
+  <div style="height:300px;">
+  <canvas id="Chart-Productos"></canvas>
 </div>
-</div> 
+</div>
+<div class="card w-50 mx-auto p-4">
+  <div class="h3">Usuarios</div>
+  <div style="height:300px;">
+    <canvas id="Chart-Usuarios"></canvas>
+  </div>
+</div>
 
+<script src="{% static 'ChartJS/chart.js' %}"></script>
 
+{% include "partials/charts/chart-productos.html" %}
+{% include "partials/charts/chart-usuarios.html" %}
 
-
-
-
-
-<canvas id="Chart-Usuarios" width="400" height="200"></canvas>
 {% endblock %}

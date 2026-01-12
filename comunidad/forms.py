@@ -31,7 +31,9 @@ class UsuarioForm(forms.ModelForm):
             'fecha_registro',
             'imagen'
         ]
-        # ← NO incluyas 'rol' aquí porque no existe en el modelo Usuario
+        widgets={
+            'fecha_registro':widgets.DateInput(attrs={'type':'date'},format='%Y-%m-%d')
+        }# ← NO incluyas 'rol' aquí porque no existe en el modelo Usuario
         
 class UsuarioEditarForm(ModelForm):
     rol= ModelChoiceField(

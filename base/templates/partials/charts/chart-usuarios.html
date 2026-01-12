@@ -1,0 +1,45 @@
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const ctxUsuarios = document.getElementById('Chart-Usuarios');
+
+    if (!ctxUsuarios) {
+        console.log('Canvas Chart-Usuarios NO encontrado');
+        return;
+    }
+
+    const labels = [
+        {% for u in usuarios_obj %}
+            "{{ u.primer_nombre }}"{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    ];
+
+    const dataValues = Array(labels.length).fill(1);
+
+    new Chart(ctxUsuarios, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Usuarios',
+                data: dataValues,
+
+                /* 👇 AQUÍ VAN LOS COLORES 👇 */
+                backgroundColor: 'rgba(13, 110, 253, 0.7)',   // azul
+                borderColor: 'rgba(13, 110, 253, 1)',
+                borderWidth: 1,
+                hoverBackgroundColor: 'rgba(20, 238, 53, 0.8)'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { precision: 0 }
+                }
+            }
+        }
+    });
+});
+</script>
