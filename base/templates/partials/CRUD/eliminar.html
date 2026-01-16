@@ -1,0 +1,21 @@
+<div class="modal fade" id="modalEliminar{{ slider.id }}" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <form method="post" action="{% url 'eliminar_slider' slider.id %}">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title">¿Eliminar {{ titulo }}?</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          ¿Estás seguro que deseas eliminar:<br>
+          <strong>{{ slider.nombre }}</strong>?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-danger">Eliminar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

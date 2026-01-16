@@ -1,12 +1,13 @@
 {% extends 'partials/admin/body.html' %}
-
 {% load bootstrap_icons %}
 
 {% block contenido %}
-<div class="container-fluid m-4 row">
+<div class="container-fluid row m-4">
+
   {% include 'partials/CRUD/crear.html' %}
-  <div class="rounded card p-3 mx-4 col-md-8">
-    <table class="table table-bordered w-100 display nowrap">
+
+  <div class="card rounded col-md-8 p-3 mx-4">
+    <table class="table table-bordered w-100">
       <thead>
         <tr>
           <th>Nombre</th>
@@ -19,19 +20,28 @@
       </thead>
       <tbody>
         {% for slider in sliders %}
-          <tr>
-            <td>{{ slider.nombre }}</td>
-            <td>{{ slider.descripcion }}</td>
-            <td>{{ slider.url }}</td>
-            <td>
-              <img src="{{ slider.imagen.url }}" alt="{{ slider.nombre }}" style="max-width: 100px; max-height: 100px;" />
-            </td>
-            <td>{{ slider.prioridad }}</td>
-            <td>
-              <a href="{% url 'editar_slider' slider.id %}" class="btn btn-sm btn-primary">Editar {% bs_icon 'pencil' %}</a>
-              <a href="{% url 'eliminar_slider' slider.id %}" class="btn btn-sm btn-danger">Eliminar {% bs_icon 'trash' %}</a>
-            </td>
-          </tr>
+        <tr>
+          <td>{{ slider.nombre }}</td>
+          <td>{{ slider.descripcion }}</td>
+          <td>{{ slider.url }}</td>
+          <td>
+            <img src="{{ slider.imagen.url }}" style="max-height:80px;">
+          </td>
+          <td>{{ slider.prioridad }}</td>
+          <td>
+            <a href="{% url 'editar_slider' slider.id %}" class="btn btn-sm btn-primary">
+              Editar {% bs_icon 'pencil' %}
+            </a>
+
+            <button class="btn btn-sm btn-danger"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalEliminar{{ slider.id }}">
+              Eliminar {% bs_icon 'trash' %}
+            </button>
+          </td>
+        </tr>
+
+        {% include 'partials/CRUD/eliminar.html' %}
         {% endfor %}
       </tbody>
     </table>

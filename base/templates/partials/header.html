@@ -1,4 +1,5 @@
 {% load static %}
+{% load bootstrap_icons %}
 
 <header class="header p-3 mb-3 border-bottom">
   <div class="container">
@@ -23,7 +24,8 @@
       <div class="dropdown text-end">
         
         <a href="#" class="d-block link-body-emphasis text-decoration-none " data-bs-toggle="dropdown" aria-expanded="false">
-          <img src="{% static 'img/usuario.jpg' %} " alt="adm" width="32" height="32" class="rounded-circle">    
+          <img src="{% static 'img/usuario.jpg' %} " alt="adm" width="32" height="32" class="rounded-circle">    {% bs_icon 'caret-down-fill' %}
+        </a>
         </a>
         <ul class="dropdown-menu text-small" >
           <li><a class="dropdown-item" href=" {% url 'login' %} ">Acceder</a></li>
