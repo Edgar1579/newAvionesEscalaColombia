@@ -60,12 +60,12 @@
 
         <!-- Botones de acción -->
         <div class="d-grid gap-2 mb-4">
-          <button class="btn btn-success btn-lg" style="border-radius: 8px; font-weight: 600;">
-            🛒 Añadir al carrito
-          </button>
-          <a href="{% url 'index' %}" class="btn btn-outline-secondary btn-lg" style="border-radius: 8px; font-weight: 600;">
-            {% bs_icon 'arrow-left' %} Volver a productos
-          </a>
+<a href="{% url 'agregar_carrito' producto.id %}" 
+   class="btn btn-success btn-lg" 
+   style="border-radius: 8px; font-weight: 600;">
+    🛒 Añadir al carrito
+</a>
+
         </div>
 
         <!-- Descripción -->

@@ -58,6 +58,112 @@
     </div>
 
 
+    
+<!-- MODAL CARRITO -->
+<div class="modal fade" id="carritoModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+
+      <!-- HEADER -->
+      <div class="modal-header">
+        <h5 class="modal-title">🛒 Tu carrito</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <!-- BODY -->
+      <div class="modal-body">
+
+        {% if carrito %}
+        <table class="table align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>Producto</th>
+              <th class="text-end">Precio</th>
+              <th class="text-center">Cant.</th>
+              <th class="text-end">Subtotal</th>
+              <th></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% for key, item in carrito.items %}
+            <tr>
+              <td>
+                <img src="{{ item.imagen }}" width="50" class="me-2 rounded">
+                {{ item.nombre }}
+              </td>
+
+              <td class="text-end">
+                ${{ item.precio|floatformat:0 }}
+              </td>
+              <td class="text-center">
+              <div class="btn-group btn-group-sm" role="group">
+                <a href="{% url 'restar_carrito' key %}" class="btn btn-outline-secondary">−</a>
+                <span class="btn btn-light disabled">{{ item.cantidad }}</span>
+                <a href="{% url 'sumar_carrito' key %}" class="btn btn-outline-secondary">+</a>
+              </div>
+              </td>
+
+              <td class="text-end fw-semibold">
+                ${{ item.subtotal|floatformat:0 }}
+              </td>
+
+              <td class="text-end">
+                <a href="{% url 'quitar_carrito' key %}" class="btn btn-sm btn-outline-danger">
+                  ✖
+                </a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+        <!-- TOTAL GENERAL -->
+        <div class="d-flex justify-content-end mt-3">
+          <h5 class="fw-bold">
+            Total del pedido:
+            <span class="text-success">
+              ${{ total|floatformat:0 }}
+            </span>
+          </h5>
+        </div>
+
+        {% else %}
+          <p class="text-center text-muted my-4">
+            Tu carrito está vacío
+          </p>
+        {% endif %}
+
+      </div>
+
+      <!-- FOOTER -->
+<div class="modal-footer d-flex justify-content-between">
+
+  {% if carrito %}
+    <!-- 🗑 Vaciar carrito -->
+    <a href="{% url 'vaciar_carrito' %}" class="btn btn-outline-danger">
+      🗑 Vaciar carrito
+    </a>
+
+    <!-- 📲 WhatsApp -->
+    <a href="{% url 'pedido_whatsapp' %}" class="btn btn-success">
+      📲 Pedir por WhatsApp
+    </a>
+  {% else %}
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+      Cerrar
+    </button>
+  {% endif %}
+
+</div>
+
+
+    </div>
+  </div>
+</div>
+
+
+
 
 </body>
 </html>

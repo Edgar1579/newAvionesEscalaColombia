@@ -73,6 +73,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'base.context_processors.sesion',
+                'operaciones.context_processors.carrito_context',
             ],
         },
     },

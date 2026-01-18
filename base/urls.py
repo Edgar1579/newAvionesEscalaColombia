@@ -22,6 +22,7 @@ from base.views import principal, principal_admin, logout_user
 ##para el login y contraseña
 from django.contrib.auth import views as auth_views
 
+app_name = "operaciones"
 
 urlpatterns = [
     path('login/',auth_views.LoginView.as_view(template_name='registration/login.html'),name='login'),

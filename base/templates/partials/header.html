@@ -4,9 +4,6 @@
 <header class="header p-3 mb-3 border-bottom">
   <div class="container">
     <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-      <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none">
-    
-      </a>
 
       <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
         <li><a href="{% url 'index' %}" class="nav-link px-2 link-secondary">Inicio</a></li>
@@ -15,25 +12,49 @@
         <li><a href="#footer" class="nav-link px-2 link-body-emphasis scroll-suave">Contacto</a></li>
       </ul>
 
-      <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="buscar">
+      <!-- 🔍 BUSCAR -->
+      <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
         <input type="search" class="form-control" placeholder="Buscar..." aria-label="Buscar">
       </form>
-      <a href="#" class="d-block link-body-emphasis text-decoration-none " data-bs-toggle="modal" data-bs-target="#carritoModal">
-        <div class="rounded-circle bg-azul text-light p-2 m-2"></div>
-      </a>
-      <div class="dropdown text-end">
+
+      <!-- 🛒 CARRITO -->
+      <a 
+        href="#"
+        class="position-relative me-3 text-decoration-none"
+        data-bs-toggle="modal"
+        data-bs-target="#carritoModal"
+      >
+        {% bs_icon 'cart3' size='1.5em' %}
         
-        <a href="#" class="d-block link-body-emphasis text-decoration-none " data-bs-toggle="dropdown" aria-expanded="false">
-          <img src="{% static 'img/usuario.jpg' %} " alt="adm" width="32" height="32" class="rounded-circle">    {% bs_icon 'caret-down-fill' %}
+        <!-- contador (opcional) -->
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+          {{ request.session.carrito|length|default:0 }}
+        </span>
+      </a>
+
+      <!-- 👤 USUARIO -->
+      <div class="dropdown text-end">
+        <a 
+          href="#"
+          class="d-flex align-items-center link-body-emphasis text-decoration-none"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          <img src="{% static 'img/usuario.jpg' %}" alt="usuario" width="32" height="32" class="rounded-circle me-1">
+          {% bs_icon 'caret-down-fill' %}
         </a>
-        </a>
-        <ul class="dropdown-menu text-small" >
-          <li><a class="dropdown-item" href=" {% url 'login' %} ">Acceder</a></li>
+
+        <ul class="dropdown-menu text-small">
+          <li><a class="dropdown-item" href="{% url 'login' %}">Acceder</a></li>
           <li><a class="dropdown-item" href="#">Registrarse</a></li>
           <li><hr class="dropdown-divider"></li>
           <li><a class="dropdown-item" href="#">Ayuda</a></li>
         </ul>
       </div>
+
     </div>
   </div>
+
+
+  
 </header>

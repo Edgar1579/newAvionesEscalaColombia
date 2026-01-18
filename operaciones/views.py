@@ -1,12 +1,15 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from PIL import Image
 from django.contrib import messages
+from PIL import Image
 from operaciones.models import Producto, ImagenProducto
 from operaciones.forms import ProductoForm, ProductoEditarForm
 
 
+# ==========================
+# UTILIDADES IMÁGENES
+# ==========================
+
 def redimensionar_imagen(imagen_path, size=(500, 500)):
-    """Función auxiliar para redimensionar imágenes"""
     try:
         img = Image.open(imagen_path)
         img = img.resize(size, Image.Resampling.LANCZOS)
@@ -16,128 +19,235 @@ def redimensionar_imagen(imagen_path, size=(500, 500)):
 
 
 def procesar_imagenes_adicionales(request, producto):
-    """Función auxiliar para procesar múltiples imágenes"""
     imagenes = request.FILES.getlist('imagenes_adicionales')
-    
+
     if imagenes:
-        # Obtener el último orden de las imágenes existentes
         ultima_imagen = producto.imagenes_galeria.order_by('-orden').first()
         orden_inicial = ultima_imagen.orden + 1 if ultima_imagen else 1
-        
+
         for idx, imagen in enumerate(imagenes):
-            imagen_producto = ImagenProducto.objects.create(
+            img = ImagenProducto.objects.create(
                 producto=producto,
                 imagen=imagen,
                 orden=orden_inicial + idx
             )
-            # Redimensionar cada imagen de la galería
-            if imagen_producto.imagen:
-                redimensionar_imagen(imagen_producto.imagen.path)
+            if img.imagen:
+                redimensionar_imagen(img.imagen.path)
 
+
+# ==========================
+# PRODUCTOS
+# ==========================
 
 def producto_crear(request):
+    productos = Producto.objects.filter(estado=True)
     titulo = "Producto"
     accion = "Agregar"
-    productos = Producto.objects.filter(estado=True)
-    
+
     if request.method == "POST":
         form = ProductoForm(request.POST, request.FILES)
         if form.is_valid():
             producto = form.save()
-            
-            # Redimensionar imagen principal
+
             if producto.imagen:
                 redimensionar_imagen(producto.imagen.path)
-            
-            # Procesar imágenes adicionales de la galería
+
             procesar_imagenes_adicionales(request, producto)
-            
-            producto.save()
-            messages.success(request, f'¡El Producto "{producto.nombre}" se agregó de forma exitosa!') 
+
+            messages.success(request, f'Producto "{producto.nombre}" agregado correctamente')
             return redirect("productos")
         else:
-            messages.error(request, '¡Error al agregar el Producto! Verifica los datos.') 
+            messages.error(request, "Error al agregar producto")
     else:
         form = ProductoForm()
-    
-    context = {
+
+    return render(request, "operaciones/productos/productos.html", {
         "titulo": titulo,
         "productos": productos,
         "form": form,
         "accion": accion
-    }
-    return render(request, "operaciones/productos/productos.html", context)
+    })
 
 
 def producto_editar(request, pk):
     producto = get_object_or_404(Producto, id=pk)
     productos = Producto.objects.filter(estado=True)
     imagenes_galeria = producto.imagenes_galeria.all()
-    
-    accion = "Editar"
-    nombre = f"{producto.nombre}"
-    titulo = f"Producto {producto.id} - {nombre}"
 
     if request.method == "POST":
         form = ProductoEditarForm(request.POST, request.FILES, instance=producto)
         if form.is_valid():
             producto = form.save()
-            
-            # Redimensionar imagen principal si se actualizó
+
             if 'imagen' in request.FILES and producto.imagen:
                 redimensionar_imagen(producto.imagen.path)
-            
-            # Procesar nuevas imágenes adicionales
+
             procesar_imagenes_adicionales(request, producto)
-            
-            producto.save()
-            messages.success(request, f'¡{nombre} se editó de forma exitosa!')
+
+            messages.success(request, "Producto editado correctamente")
             return redirect("productos")
         else:
-            messages.error(request, f'¡Error al editar {nombre}!')
+            messages.error(request, "Error al editar producto")
     else:
         form = ProductoEditarForm(instance=producto)
-    
-    context = {
-        "titulo": titulo,
+
+    return render(request, "operaciones/productos/productos.html", {
+        "titulo": f"Producto {producto.id}",
         "productos": productos,
         "producto": producto,
         "imagenes_galeria": imagenes_galeria,
         "form": form,
-        "accion": accion
-    }
-    return render(request, "operaciones/productos/productos.html", context)
+        "accion": "Editar"
+    })
 
 
 def producto_eliminar(request, pk):
     producto = get_object_or_404(Producto, id=pk)
-    nombre = producto.nombre
     producto.estado = False
     producto.save()
-    
-    messages.success(request, f'¡El Producto "{nombre}" se eliminó correctamente!')
-    return redirect('productos')
+    messages.success(request, "Producto eliminado")
+    return redirect("productos")
 
 
 def imagen_galeria_eliminar(request, pk):
-    """Vista para eliminar una imagen específica de la galería"""
     imagen = get_object_or_404(ImagenProducto, id=pk)
     producto_id = imagen.producto.id
-    
-    # Eliminar el archivo físico
+
     if imagen.imagen:
         imagen.imagen.delete()
-    
+
     imagen.delete()
-    messages.success(request, '¡Imagen eliminada de la galería!')
-    return redirect('producto_editar', pk=producto_id)
+    messages.success(request, "Imagen eliminada")
+    return redirect("producto_editar", pk=producto_id)
+
+
 def producto_detalle(request, pk):
-    """Vista para ver el detalle de un producto con todas sus imágenes"""
     producto = get_object_or_404(Producto, pk=pk, estado=True)
     imagenes_galeria = producto.imagenes_galeria.all()
-    
-    context = {
-        'producto': producto,
-        'imagenes_galeria': imagenes_galeria,
+
+    return render(request, "operaciones/productos/detalle.html", {
+        "producto": producto,
+        "imagenes_galeria": imagenes_galeria
+    })
+
+
+# ==========================
+# CARRITO
+# ==========================
+
+def agregar_carrito(request, producto_id):
+    producto = get_object_or_404(Producto, id=producto_id)
+    carrito = request.session.get('carrito', {})
+    pid = str(producto_id)
+
+    if pid in carrito:
+        carrito[pid]['cantidad'] += 1
+    else:
+        carrito[pid] = {
+            'producto_id': producto.id,
+            'nombre': producto.nombre,
+            'precio': str(producto.precio),
+            'cantidad': 1,
+            'imagen': producto.imagen.url if producto.imagen else ''
+        }
+
+    request.session['carrito'] = carrito
+    request.session.modified = True
+    return redirect(request.META.get('HTTP_REFERER', '/'))
+
+
+def sumar_carrito(request, producto_id):
+    carrito = request.session.get('carrito', {})
+    pid = str(producto_id)
+
+    if pid in carrito:
+        carrito[pid]['cantidad'] += 1
+
+    request.session['carrito'] = carrito
+    request.session.modified = True
+    return redirect(request.META.get('HTTP_REFERER', '/'))
+
+
+def restar_carrito(request, producto_id):
+    carrito = request.session.get('carrito', {})
+    pid = str(producto_id)
+
+    if pid in carrito:
+        carrito[pid]['cantidad'] -= 1
+        if carrito[pid]['cantidad'] <= 0:
+            del carrito[pid]
+
+    request.session['carrito'] = carrito
+    request.session.modified = True
+    return redirect(request.META.get('HTTP_REFERER', '/'))
+
+
+def quitar_carrito(request, producto_id):
+    carrito = request.session.get('carrito', {})
+    pid = str(producto_id)
+
+    if pid in carrito:
+        del carrito[pid]
+
+    request.session['carrito'] = carrito
+    request.session.modified = True
+    return redirect(request.META.get('HTTP_REFERER', '/'))
+
+
+def obtener_carrito(request):
+    carrito = request.session.get('carrito', {})
+    total = 0
+    cantidad_items = 0
+
+    for item in carrito.values():
+        precio = float(item.get('precio', 0))
+        cantidad = int(item.get('cantidad', 0))
+
+        item['subtotal'] = precio * cantidad   # 👈 CLAVE
+        total += item['subtotal']
+        cantidad_items += cantidad
+
+    return {
+        'carrito': carrito,
+        'total': round(total, 2),
+        'cantidad_items': cantidad_items
     }
-    return render(request, 'operaciones/productos/detalle.html', context)
+
+
+# ==========================
+# PEDIDO WHATSAPP
+# ==========================
+
+def pedido_whatsapp(request):
+    carrito = request.session.get('carrito', {})
+
+    if not carrito:
+        return redirect('/')
+
+    telefono = "573202109787"  # CAMBIA ESTE NÚMERO
+    mensaje = "🛒 *Nuevo pedido*\n\n"
+    total = 0
+
+    for item in carrito.values():
+        precio = float(item['precio'])
+        cantidad = int(item['cantidad'])
+        subtotal = precio * cantidad
+        total += subtotal
+
+        mensaje += f"• {item['nombre']} x {cantidad} = ${subtotal:,.0f}\n"
+
+    mensaje += f"\n💰 *Total:* ${total:,.0f}"
+
+    import urllib.parse
+    mensaje = urllib.parse.quote(mensaje)
+
+    request.session['carrito'] = {}
+    request.session.modified = True
+
+    return redirect(f"https://wa.me/{telefono}?text={mensaje}")
+
+
+def vaciar_carrito(request):
+    request.session['carrito'] = {}
+    request.session.modified = True
+    return redirect(request.META.get('HTTP_REFERER', '/'))
