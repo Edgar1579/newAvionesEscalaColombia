@@ -4,10 +4,6 @@ from comunidad.models import Usuario, Tienda
 from django.contrib.auth.models import Group, Permission
 from django.contrib.admin.widgets import FilteredSelectMultiple 
 
-# forms.py
-from django import forms
-from .models import Usuario
-from django.contrib.auth.models import Group
 
 class UsuarioForm(forms.ModelForm):
     rol = forms.ModelChoiceField(

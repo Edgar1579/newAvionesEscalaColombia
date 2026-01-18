@@ -1,5 +1,6 @@
 {% load django_bootstrap5 %}
 {% load static %}
+{% load bootstrap_icons %}
 
 <!DOCTYPE html>
 <html lang="es">
@@ -165,7 +166,54 @@
   </div>
 </div>
 
+<!-- Modal de Reseña -->
+<div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="reviewModalLabel">¿Qué te pareció tu experiencia?</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4">
+        <form id="reviewForm" method="POST" action="#">
+          {% csrf_token %}
+          
+          <!-- Selección de Estrellas -->
+          <div class="mb-3 text-center">
+            <label class="form-label d-block">Tu Calificación</label>
+            <div class="rating-stars h3 text-warning">
+              <!-- Usando tus iconos de bootstrap -->
+              <input type="radio" name="rating" value="1" id="star1" class="btn-check" required>
+              <label for="star1" class="cursor-pointer">{% bs_icon 'star' %}</label>
+              
+              <input type="radio" name="rating" value="2" id="star2" class="btn-check">
+              <label for="star2" class="cursor-pointer">{% bs_icon 'star' %}</label>
+              
+              <input type="radio" name="rating" value="3" id="star3" class="btn-check">
+              <label for="star3" class="cursor-pointer">{% bs_icon 'star' %}</label>
+              
+              <input type="radio" name="rating" value="4" id="star4" class="btn-check">
+              <label for="star4" class="cursor-pointer">{% bs_icon 'star' %}</label>
+              
+              <input type="radio" name="rating" value="5" id="star5" class="btn-check">
+              <label for="star5" class="cursor-pointer">{% bs_icon 'star' %}</label>
+            </div>
+          </div>
 
+          <!-- Comentario -->
+          <div class="form-floating mb-3">
+            <textarea class="form-control" placeholder="Escribe tu opinión aquí" id="floatingTextarea" style="height: 100px" name="comentario" required></textarea>
+            <label for="floatingTextarea">Cuéntanos más detalles...</label>
+          </div>
+
+          <div class="d-grid">
+            <button type="submit" class="btn btn-primary">Enviar opinión</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 </body>
