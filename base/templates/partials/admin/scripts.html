@@ -157,3 +157,22 @@
             }
         }, maxLoadTime);
     </script>
+
+    <script>
+    // SCRIPT ESPECÍFICO PARA EL MODAL DE MISIÓN Y VISIÓN
+    document.addEventListener('DOMContentLoaded', function () {
+        const misionModal = document.getElementById('misionVisionModal');
+        
+        if (misionModal) {
+            // Evento opcional: Ejecutar algo cuando el modal se abra
+            misionModal.addEventListener('show.bs.modal', function (event) {
+                console.log('Cargando Misión y Visión de la empresa 3D...');
+            });
+
+            // Resetear el scroll si el contenido es muy largo al cerrar
+            misionModal.addEventListener('hidden.bs.modal', function () {
+                document.body.style.overflow = 'auto';
+            });
+        }
+    });
+</script>

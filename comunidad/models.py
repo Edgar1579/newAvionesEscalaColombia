@@ -56,3 +56,10 @@ class Tienda(models.Model):
     def __str__(self):
         return self.nombre    
 
+class Resena(models.Model):
+    puntuacion = models.IntegerField()
+    comentario = models.TextField()
+    fecha = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.puntuacion} estrellas - {self.fecha.strftime('%d/%m/%Y')}"

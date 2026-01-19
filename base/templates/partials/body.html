@@ -7,39 +7,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- Favicon optimizado -->
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'img/av1.png' %}">
-    <!-- <link rel="apple-touch-icon" href="{% static 'img/av1.png' %}"> -->
-    
     <title>Aviones a Escala de Colombia - {{titulo}}</title>
     
-    <!-- DNS prefetch para recursos externos -->
     <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
     <link rel="dns-prefetch" href="//fonts.googleapis.com">
-    
-    <!-- Preload crítico del logo antes que otros recursos -->
     <link rel="preload" href="{% static 'img/av1.png' %}" as="image" importance="high">
     
-    <!-- CSS Bootstrap y otros -->
     {% bootstrap_css %}
     {% bootstrap_javascript %}
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <!-- Reemplaza tu enlace actual con este -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
 <body>
-    <!-- LOADER: Se muestra primero -->
+    <!-- LOADER -->
     <div id="loader">
         <div class="logo-container">
             <div class="logo-spinner"></div>
             <div class="logo" id="logoContainer">
-                <!-- Tu logo desde Django static -->
                 <img src="{% static 'img/av1sfondo.png' %}" alt="Logo AV" style="width: 80px; height: 80px;" id="logoImg">
             </div>
         </div>
@@ -49,172 +35,165 @@
         </div>
     </div>
 
-    <!-- CONTENIDO PRINCIPAL: Se muestra después de cargar -->
+    <!-- CONTENIDO PRINCIPAL -->
     <div id="content">
         {% include 'partials/header.html' %}
 
         {% block contenido %}
-        <!-- Tu contenido va aquí -->
+        <!-- Contenido dinámico -->
         {% endblock contenido %}
 
         {% include 'partials/footer.html' %}
-        <!-- {% include 'partials/admin/scripts.html' %} -->
+        {% include 'partials/admin/scripts.html' %}
     </div>
 
+    <!-- ============================================
+         MODALES (Deben ir fuera del div #content o al final)
+         ============================================ -->
 
-    
-<!-- MODAL CARRITO -->
-<div class="modal fade" id="carritoModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-    <div class="modal-content">
-
-      <!-- HEADER -->
-      <div class="modal-header">
-        <h5 class="modal-title">🛒 Tu carrito</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-
-      <!-- BODY -->
-      <div class="modal-body">
-
-        {% if carrito %}
-        <table class="table align-middle">
-          <thead class="table-light">
-            <tr>
-              <th>Producto</th>
-              <th class="text-end">Precio</th>
-              <th class="text-center">Cant.</th>
-              <th class="text-end">Subtotal</th>
-              <th></th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {% for key, item in carrito.items %}
-            <tr>
-              <td>
-                <img src="{{ item.imagen }}" width="50" class="me-2 rounded">
-                {{ item.nombre }}
-              </td>
-
-              <td class="text-end">
-                ${{ item.precio|floatformat:0 }}
-              </td>
-              <td class="text-center">
-              <div class="btn-group btn-group-sm" role="group">
-                <a href="{% url 'restar_carrito' key %}" class="btn btn-outline-secondary">−</a>
-                <span class="btn btn-light disabled">{{ item.cantidad }}</span>
-                <a href="{% url 'sumar_carrito' key %}" class="btn btn-outline-secondary">+</a>
-              </div>
-              </td>
-
-              <td class="text-end fw-semibold">
-                ${{ item.subtotal|floatformat:0 }}
-              </td>
-
-              <td class="text-end">
-                <a href="{% url 'quitar_carrito' key %}" class="btn btn-sm btn-outline-danger">
-                  ✖
-                </a>
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-
-        <!-- TOTAL GENERAL -->
-        <div class="d-flex justify-content-end mt-3">
-          <h5 class="fw-bold">
-            Total del pedido:
-            <span class="text-success">
-              ${{ total|floatformat:0 }}
-            </span>
-          </h5>
+    <!-- MODAL CARRITO -->
+    <div class="modal fade" id="carritoModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">🛒 Tu carrito</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    {% if carrito %}
+                    <table class="table align-middle">
+                        <!-- ... contenido de tu tabla ... -->
+                    </table>
+                    {% else %}
+                    <p class="text-center text-muted my-4">Tu carrito está vacío</p>
+                    {% endif %}
+                </div>
+                <div class="modal-footer d-flex justify-content-between">
+                    {% if carrito %}
+                    <a href="{% url 'vaciar_carrito' %}" class="btn btn-outline-danger">🗑 Vaciar carrito</a>
+                    <a href="{% url 'pedido_whatsapp' %}" class="btn btn-success">📲 Pedir por WhatsApp</a>
+                    {% else %}
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    {% endif %}
+                </div>
+            </div>
         </div>
-
-        {% else %}
-          <p class="text-center text-muted my-4">
-            Tu carrito está vacío
-          </p>
-        {% endif %}
-
-      </div>
-
-      <!-- FOOTER -->
-<div class="modal-footer d-flex justify-content-between">
-
-  {% if carrito %}
-    <!-- 🗑 Vaciar carrito -->
-    <a href="{% url 'vaciar_carrito' %}" class="btn btn-outline-danger">
-      🗑 Vaciar carrito
-    </a>
-
-    <!-- 📲 WhatsApp -->
-    <a href="{% url 'pedido_whatsapp' %}" class="btn btn-success">
-      📲 Pedir por WhatsApp
-    </a>
-  {% else %}
-    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-      Cerrar
-    </button>
-  {% endif %}
-
-</div>
-
-
     </div>
-  </div>
+
+    <!-- MODAL MISIÓN Y VISIÓN (Diseño en Verde Tecnológico) -->
+<div class="modal fade" id="misionVisionModal" tabindex="-1" aria-labelledby="misionVisionLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content shadow-lg" style="border: none; border-radius: 15px;">
+            
+            <!-- Encabezado con degradado verde esmeralda (identidad colombiana) -->
+            <div class="modal-header text-white" style="background: linear-gradient(90deg, #198754 0%, #20c997 100%); border-radius: 15px 15px 0 0;">
+                <h5 class="modal-title" id="misionVisionLabel">
+                    <i class="fas fa-plane-up me-2"></i> Nuestra Identidad Corporativa
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body p-4" style="background-color: #fcfdfc;">
+                <!-- Sección Misión -->
+                <div class="row align-items-center mb-4">
+                    <div class="col-md-2 text-center" style="color: #198754;">
+                        <i class="fas fa-bullseye fa-3x"></i>
+                    </div>
+                    <div class="col-md-10">
+                        <h4 class="fw-bold" style="color: #146c43;">Misión</h4>
+                        <p class="text-secondary mb-0" style="text-align: justify; border-left: 3px solid #198754; padding-left: 15px;">
+                            "Liderar la industria del modelismo aeronáutico en Colombia mediante el uso de tecnologías de **impresión 3D de alta definición**. Nuestra misión es fabricar réplicas exactas y personalizadas que honren la historia de la aviación, ofreciendo a coleccionistas y profesionales piezas con un nivel de detalle inalcanzable por métodos tradicionales, garantizando procesos ágiles, materiales de calidad y un sello de excelencia en ingeniería colombiana."
+                        </p>
+                    </div>
+                </div>
+
+                <hr class="my-4" style="opacity: 0.1; background-color: #198754;">
+
+                <!-- Sección Visión -->
+                <div class="row align-items-center">
+                    <div class="col-md-2 text-center" style="color: #198754;">
+                        <i class="fas fa-leaf fa-3x"></i> <!-- Icono de hoja para representar sostenibilidad 3D -->
+                    </div>
+                    <div class="col-md-10">
+                        <h4 class="fw-bold" style="color: #146c43;">Visión</h4>
+                        <p class="text-secondary mb-0" style="text-align: justify; border-left: 3px solid #20c997; padding-left: 15px;">
+                            "En el futuro, seremos la fábrica de aviones a escala líder en Latinoamérica, reconocida por revolucionar el modelismo a través de la **fabricación aditiva avanzada**. Aspiramos a ser el socio estratégico de aerolíneas, museos y entusiastas globales, integrando inteligencia artificial y nuevos materiales en nuestras impresiones 3D para llevar la precisión de nuestras réplicas a una escala sin precedentes."
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer con detalles en verde -->
+            <div class="modal-footer bg-light" style="border-radius: 0 0 15px 15px;">
+                <small class="text-muted me-auto">
+                    <i class="fas fa-microchip me-1 text-success"></i> Tecnología 3D Sostenible | Colombia 🇨🇴
+                </small>
+                <button type="button" class="btn btn-success px-4" data-bs-dismiss="modal" style="background-color: #198754; border: none; border-radius: 8px;">
+                    Entendido
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
+
 
 <!-- Modal de Reseña -->
 <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content border-0 shadow">
+    <div class="modal-content border-0 shadow-lg">
+      
+      <!-- Encabezado del Modal -->
       <div class="modal-header bg-primary text-white">
-        <h5 class="modal-title" id="reviewModalLabel">¿Qué te pareció tu experiencia?</h5>
+        <h5 class="modal-title" id="reviewModalLabel">
+          {% bs_icon 'chat-left-text-fill' %} ¿Qué te pareció tu experiencia?
+        </h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
+
       <div class="modal-body p-4">
-        <form id="reviewForm" method="POST" action="#">
+        <!-- IMPORTANTE: El action debe apuntar a la URL de tu vista index -->
+        <form id="reviewForm" method="POST" action="{% url 'index' %}">
           {% csrf_token %}
           
-          <!-- Selección de Estrellas -->
-          <div class="mb-3 text-center">
-            <label class="form-label d-block">Tu Calificación</label>
-            <div class="rating-stars h3 text-warning">
-              <!-- Usando tus iconos de bootstrap -->
-              <input type="radio" name="rating" value="1" id="star1" class="btn-check" required>
-              <label for="star1" class="cursor-pointer">{% bs_icon 'star' %}</label>
-              
-              <input type="radio" name="rating" value="2" id="star2" class="btn-check">
-              <label for="star2" class="cursor-pointer">{% bs_icon 'star' %}</label>
-              
-              <input type="radio" name="rating" value="3" id="star3" class="btn-check">
-              <label for="star3" class="cursor-pointer">{% bs_icon 'star' %}</label>
+          <!-- Selección de Estrellas (Rating) -->
+          <div class="mb-4 text-center">
+            <label class="form-label d-block fw-bold mb-3">Tu Calificación</label>
+            <div class="rating-group d-flex justify-content-center flex-row-reverse">
+              <!-- El orden inverso en HTML es para el truco de hover en CSS -->
+              <input type="radio" name="rating" value="5" id="star5" class="btn-check" required>
+              <label for="star5" class="star-label px-1">{% bs_icon 'star' %}</label>
               
               <input type="radio" name="rating" value="4" id="star4" class="btn-check">
-              <label for="star4" class="cursor-pointer">{% bs_icon 'star' %}</label>
+              <label for="star4" class="star-label px-1">{% bs_icon 'star' %}</label>
               
-              <input type="radio" name="rating" value="5" id="star5" class="btn-check">
-              <label for="star5" class="cursor-pointer">{% bs_icon 'star' %}</label>
+              <input type="radio" name="rating" value="3" id="star3" class="btn-check">
+              <label for="star3" class="star-label px-1">{% bs_icon 'star' %}</label>
+              
+              <input type="radio" name="rating" value="2" id="star2" class="btn-check">
+              <label for="star2" class="star-label px-1">{% bs_icon 'star' %}</label>
+              
+              <input type="radio" name="rating" value="1" id="star1" class="btn-check">
+              <label for="star1" class="star-label px-1">{% bs_icon 'star' %}</label>
             </div>
           </div>
 
-          <!-- Comentario -->
+          <!-- Área de Comentario -->
           <div class="form-floating mb-3">
-            <textarea class="form-control" placeholder="Escribe tu opinión aquí" id="floatingTextarea" style="height: 100px" name="comentario" required></textarea>
-            <label for="floatingTextarea">Cuéntanos más detalles...</label>
+            <textarea class="form-control" placeholder="Escribe tu opinión aquí" id="comentarioInput" name="comentario" style="height: 120px" required></textarea>
+            <label for="comentarioInput">Cuéntanos más detalles sobre tu avión...</label>
           </div>
 
-          <div class="d-grid">
-            <button type="submit" class="btn btn-primary">Enviar opinión</button>
+          <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary rounded-pill py-2 fw-bold">
+              ENVIAR OPINIÓN
+            </button>
+            <button type="button" class="btn btn-light rounded-pill py-2" data-bs-dismiss="modal">Cancelar</button>
           </div>
         </form>
       </div>
     </div>
   </div>
 </div>
-
 
 </body>
 </html>

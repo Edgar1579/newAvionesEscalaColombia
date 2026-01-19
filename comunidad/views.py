@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import Group
 from comunidad.forms import UsuarioForm, UsuarioEditarForm, GroupForm, TiendaForm, TiendaEditarForm
-from comunidad.models import Usuario,Tienda
+from comunidad.models import Usuario,Tienda, Resena
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import permission_required
@@ -199,3 +199,4 @@ def tienda_editar(request, pk):
         "accion": accion
     }
     return render(request, "comunidad/tiendas/tiendas.html", context)
+
