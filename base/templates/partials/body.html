@@ -60,14 +60,57 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    {% if carrito %}
-                    <table class="table align-middle">
-                        <!-- ... contenido de tu tabla ... -->
-                    </table>
-                    {% else %}
-                    <p class="text-center text-muted my-4">Tu carrito está vacío</p>
+
+{% if carrito %}
+<table class="table align-middle">
+    <thead>
+        <tr>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Precio</th>
+            <th>Subtotal</th>
+            
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in carrito.values %}
+        <tr>
+            <td>
+                <div class="d-flex align-items-center">
+                    {% if item.imagen %}
+                    <img src="{{ item.imagen }}" width="50" class="me-2 rounded">
                     {% endif %}
+                    {{ item.nombre }}
                 </div>
+            </td>
+            <td>
+    <div class="d-flex align-items-center gap-1">
+        <a href="{% url 'restar_carrito' item.producto_id %}" class="btn btn-sm btn-outline-secondary">−</a>
+        <span class="px-2">{{ item.cantidad }}</span>
+        <a href="{% url 'sumar_carrito' item.producto_id %}" class="btn btn-sm btn-outline-secondary">+</a>
+    </div>
+</td>
+            <td>${{ item.precio|floatformat:0 }}</td>
+            <td>${{ item.subtotal|floatformat:0 }}</td>
+            
+            <td>
+                <a href="{% url 'quitar_carrito' item.producto_id %}" class="btn btn-sm btn-danger">✕</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p class="text-center text-muted my-4">Tu carrito está vacío</p>
+{% endif %}
+{% if carrito %}
+<div class="text-end fw-bold fs-5 mt-3">
+    Total: ${{ total|floatformat:0 }}
+</div>
+{% endif %}
+
+</div>
                 <div class="modal-footer d-flex justify-content-between">
                     {% if carrito %}
                     <a href="{% url 'vaciar_carrito' %}" class="btn btn-outline-danger">🗑 Vaciar carrito</a>
@@ -86,7 +129,7 @@
         <div class="modal-content shadow-lg" style="border: none; border-radius: 15px;">
             
             <!-- Encabezado con degradado verde esmeralda (identidad colombiana) -->
-            <div class="modal-header text-white" style="background: linear-gradient(90deg, #198754 0%, #20c997 100%); border-radius: 15px 15px 0 0;">
+            <div class="modal-header text-white" style="background: linear-gradient(90deg, rgb(185, 206, 191) 0%, #41544f 100%); border-radius: 15px 15px 0 0;">
                 <h5 class="modal-title" id="misionVisionLabel">
                     <i class="fas fa-plane-up me-2"></i> Nuestra Identidad Corporativa
                 </h5>
@@ -102,7 +145,7 @@
                     <div class="col-md-10">
                         <h4 class="fw-bold" style="color: #146c43;">Misión</h4>
                         <p class="text-secondary mb-0" style="text-align: justify; border-left: 3px solid #198754; padding-left: 15px;">
-                            "Liderar la industria del modelismo aeronáutico en Colombia mediante el uso de tecnologías de **impresión 3D de alta definición**. Nuestra misión es fabricar réplicas exactas y personalizadas que honren la historia de la aviación, ofreciendo a coleccionistas y profesionales piezas con un nivel de detalle inalcanzable por métodos tradicionales, garantizando procesos ágiles, materiales de calidad y un sello de excelencia en ingeniería colombiana."
+                            "Liderar la industria del modelismo aeronáutico en Colombia mediante el uso de tecnologías de **impresión 3D de alta definición**. Nuestra misión es fabricar réplicas exactas y personalizadas que honren la historia de la aviación, ofreciendo a coleccionistas y profesionales piezas con un nivel de detalle inalcanzable por métodos tradicionales, garantizando procesos ágiles, materiales de calidad y un sello de excelencia."
                         </p>
                     </div>
                 </div>
