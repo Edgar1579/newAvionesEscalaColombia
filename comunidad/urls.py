@@ -1,5 +1,6 @@
 from django.urls import path
 from comunidad.views import usuario_crear, usuario_eliminar, usuario_editar, edit_group, tienda_crear, tienda_eliminar, tienda_editar
+from comunidad.views_resenas import gestion_resenas, eliminar_resena
 
 urlpatterns = [
     path('usuarios/', usuario_crear, name="usuarios"),
@@ -12,4 +13,8 @@ urlpatterns = [
     
     path('edit_group/', edit_group, name='create_group'),
     path('edit_group/<int:group_id>/', edit_group, name='edit_group'),
+    
+    # URLs para gestión de reseñas
+    path('resenas/', gestion_resenas, name='gestion_resenas'),
+    path('resenas/eliminar/<int:resena_id>/', eliminar_resena, name='eliminar_resena'),
 ]

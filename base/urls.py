@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from base.views import principal, principal_admin, logout_user
+from base.views import principal, principal_admin, logout_user, agregar_resena
 ##para el login y contraseña
 from django.contrib.auth import views as auth_views
 
@@ -30,6 +30,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', principal,name="index"),
     path('adm/', principal_admin,name="index-admin"),
+    path('agregar-resena/', agregar_resena, name="agregar_resena"),
     path('comunidad/', include('comunidad.urls')),
     path('operaciones/', include('operaciones.urls')),
     path('configuraciones/',include('configuracion.urls')),

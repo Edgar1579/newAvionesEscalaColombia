@@ -1,0 +1,100 @@
+{% extends '../partials/body.html' %}
+{% load static %}
+{% load bootstrap_icons %}
+
+{% block contenido %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>{% bs_icon 'chat-left-text' %} Gestión de Reseñas</h2>
+                <a href="{% url 'index-admin' %}" class="btn btn-secondary">
+                    {% bs_icon 'arrow-left' %} Volver al Panel
+                </a>
+            </div>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            {% if resenas %}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Calificación</th>
+                                <th>Comentario</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for resena in resenas %}
+                            <tr>
+                                <td>{{ resena.fecha|date:"d/m/Y H:i" }}</td>
+                                <td>
+                                    <span class="text-warning">
+                                        {% if resena.puntuacion >= 1 %}{% bs_icon 'star-fill' %}{% endif %}
+                                        {% if resena.puntuacion >= 2 %}{% bs_icon 'star-fill' %}{% endif %}
+                                        {% if resena.puntuacion >= 3 %}{% bs_icon 'star-fill' %}{% endif %}
+                                        {% if resena.puntuacion >= 4 %}{% bs_icon 'star-fill' %}{% endif %}
+                                        {% if resena.puntuacion >= 5 %}{% bs_icon 'star-fill' %}{% endif %}
+                                        {% if resena.puntuacion < 5 %}{% bs_icon 'star' %}{% endif %}
+                                        {% if resena.puntuacion < 4 %}{% bs_icon 'star' %}{% endif %}
+                                        {% if resena.puntuacion < 3 %}{% bs_icon 'star' %}{% endif %}
+                                        {% if resena.puntuacion < 2 %}{% bs_icon 'star' %}{% endif %}
+                                    </span>
+                                    ({{ resena.puntuacion }}/5)
+                                </td>
+                                <td>{{ resena.comentario|truncatechars:100 }}</td>
+                                <td>
+                                    <form method="POST" action="{% url 'eliminar_resena' resena.id %}" 
+                                          onsubmit="return confirm('¿Estás seguro de eliminar esta reseña?')">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-danger btn-sm">
+                                            {% bs_icon 'trash' %} Eliminar
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="mt-3">
+                    <small class="text-muted">
+                        Total de reseñas: {{ resenas.count }}
+                    </small>
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <div class="mb-3" style="color: #6c757d;">
+                        {% bs_icon 'chat-left-dots' size='3rem' %}
+                    </div>
+                    <h4 class="text-muted">No hay reseñas para gestionar</h4>
+                    <p class="text-muted">Las reseñas aparecerán aquí cuando los usuarios dejen sus opiniones.</p>
+                    <a href="{% url 'index' %}" class="btn btn-primary">
+                        {% bs_icon 'eye' %} Ver Página Principal
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .table th {
+        border-top: none;
+    }
+    .btn-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+    }
+</style>
+{% endblock contenido %}

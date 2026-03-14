@@ -202,7 +202,7 @@
 
       <div class="modal-body p-4">
         <!-- IMPORTANTE: El action debe apuntar a la URL de tu vista index -->
-        <form id="reviewForm" method="POST" action="{% url 'index' %}">
+        <form id="reviewForm" method="POST" action="{% url 'agregar_resena' %}">
           {% csrf_token %}
           
           <!-- Selección de Estrellas (Rating) -->
@@ -210,19 +210,19 @@
             <label class="form-label d-block fw-bold mb-3">Tu Calificación</label>
             <div class="rating-group d-flex justify-content-center flex-row-reverse">
               <!-- El orden inverso en HTML es para el truco de hover en CSS -->
-              <input type="radio" name="rating" value="5" id="star5" class="btn-check" required>
+              <input type="radio" name="puntuacion" value="5" id="star5" class="btn-check" required>
               <label for="star5" class="star-label px-1">{% bs_icon 'star' %}</label>
               
-              <input type="radio" name="rating" value="4" id="star4" class="btn-check">
+              <input type="radio" name="puntuacion" value="4" id="star4" class="btn-check">
               <label for="star4" class="star-label px-1">{% bs_icon 'star' %}</label>
               
-              <input type="radio" name="rating" value="3" id="star3" class="btn-check">
+              <input type="radio" name="puntuacion" value="3" id="star3" class="btn-check">
               <label for="star3" class="star-label px-1">{% bs_icon 'star' %}</label>
               
-              <input type="radio" name="rating" value="2" id="star2" class="btn-check">
+              <input type="radio" name="puntuacion" value="2" id="star2" class="btn-check">
               <label for="star2" class="star-label px-1">{% bs_icon 'star' %}</label>
               
-              <input type="radio" name="rating" value="1" id="star1" class="btn-check">
+              <input type="radio" name="puntuacion" value="1" id="star1" class="btn-check">
               <label for="star1" class="star-label px-1">{% bs_icon 'star' %}</label>
             </div>
           </div>

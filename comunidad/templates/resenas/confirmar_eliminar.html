@@ -1,0 +1,61 @@
+{% extends '../partials/body.html' %}
+{% load bootstrap_icons %}
+
+{% block contenido %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">
+                        {% bs_icon 'exclamation-triangle-fill' %} Confirmar Eliminación
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="mb-3">¿Estás seguro que deseas eliminar esta reseña?</p>
+                    
+                    <div class="alert alert-light">
+                        <div class="row">
+                            <div class="col-sm-3"><strong>Fecha:</strong></div>
+                            <div class="col-sm-9">{{ resena.fecha|date:"d/m/Y H:i" }}</div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-sm-3"><strong>Calificación:</strong></div>
+                            <div class="col-sm-9">
+                                <span class="text-warning">
+                                    {% if resena.puntuacion >= 1 %}{% bs_icon 'star-fill' %}{% endif %}
+                                    {% if resena.puntuacion >= 2 %}{% bs_icon 'star-fill' %}{% endif %}
+                                    {% if resena.puntuacion >= 3 %}{% bs_icon 'star-fill' %}{% endif %}
+                                    {% if resena.puntuacion >= 4 %}{% bs_icon 'star-fill' %}{% endif %}
+                                    {% if resena.puntuacion >= 5 %}{% bs_icon 'star-fill' %}{% endif %}
+                                    {% if resena.puntuacion < 5 %}{% bs_icon 'star' %}{% endif %}
+                                    {% if resena.puntuacion < 4 %}{% bs_icon 'star' %}{% endif %}
+                                    {% if resena.puntuacion < 3 %}{% bs_icon 'star' %}{% endif %}
+                                    {% if resena.puntuacion < 2 %}{% bs_icon 'star' %}{% endif %}
+                                    ({{ resena.puntuacion }}/5)
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-sm-3"><strong>Comentario:</strong></div>
+                            <div class="col-sm-9">{{ resena.comentario }}</div>
+                        </div>
+                    </div>
+
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'gestion_resenas' %}" class="btn btn-secondary">
+                                {% bs_icon 'arrow-left' %} Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-danger">
+                                {% bs_icon 'trash' %} Sí, Eliminar Reseña
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}

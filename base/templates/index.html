@@ -104,6 +104,15 @@
         </div>
         {% endfor %}
     </div>
+    
+    <!-- Botón para agregar reseña siempre visible -->
+    {% if resenas %}
+    <div class="text-center mt-4">
+        <button class="btn btn-primary rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#reviewModal">
+            {% bs_icon 'plus-circle' %} Dejar mi opinión
+        </button>
+    </div>
+    {% endif %}
 </section>
 
 <!-- 3. Estilo extra para que las tarjetas se vean mejor -->
@@ -113,5 +122,16 @@
         box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
     }
 </style>
+
+<!-- Mensajes de Django -->
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show position-fixed" style="top: 20px; right: 20px; z-index: 9999;" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+{% endif %}
+
 </main>
 {% endblock contenido %}
