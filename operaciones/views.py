@@ -224,7 +224,7 @@ def pedido_whatsapp(request):
     if not carrito:
         return redirect('/')
 
-    telefono = "573202109787"  # CAMBIA ESTE NÚMERO
+    telefono = "573183785941"  # CAMBIA ESTE NÚMERO
     mensaje = "🛒 *Nuevo pedido*\n\n"
     total = 0
 

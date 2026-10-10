@@ -102,7 +102,7 @@ Este es un mensaje automático de tu aplicación Django.
                 asunto,
                 mensaje,
                 settings.EMAIL_HOST_USER,
-                ['avecbm2024@gmail.com'],  # Tu correo para recibir notificaciones
+                ['es535965@gmail.com'],  # Tu correo para recibir notificaciones
                 fail_silently=False,
             )
             
